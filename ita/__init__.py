@@ -1,20 +1,33 @@
 import os
-import sys
 import time
 from tools import filelines
 from tools.shortcuts import b
 from datetime import datetime
 
-file_folder = 'data'
+output_file = ""
+config_file = ""
 
-output_file = os.getenv('ITA_OUTPUT_FILE', 'data/data.csv')
-config_file = os.getenv('ITA_CONFIG_FILE', 'data/config.ini')
+if os.path.isfile('app.ini'):
+    with open('app.ini', 'r') as f:
+        for line in f:
+            if line.startswith('output:'):
+                output_file = line.split(':')[1].strip()
+            if line.startswith('config:'):
+                config_file = line.split(':')[1].strip()
 
-t0 = 0
-first_data = True
+if output_file == "":
+  output_file = os.getenv('ITA_OUTPUT_FILE', 'data.csv')
+
+if config_file == "":
+  config_file = os.getenv('ITA_CONFIG_FILE', 'config.ini')
 
 print('Using output file:', output_file)
 print('Using config file:', config_file)
+
+file_folder = 'data'
+
+t0 = 0
+first_data = True
 
 def success(data, type='GET'):
     return { 'response': 'success', 'type': type, 'data': data}
@@ -23,6 +36,8 @@ def error(message=None, type='GET'):
     return { 'response': 'error', 'type': type, 'message': message or 'Something went wrong' }
 
 def last_index():
+    if not os.path.isfile(output_file):
+        return 0
     line = filelines.last(output_file)
     return 0 if line == None else int(line.split('\t')[1])
 
@@ -49,6 +64,7 @@ def save_data(data):
     global first_data
     global t0
     #try:
+
     with open(output_file, 'a') as f:
       if first_data:
         t0 = time.time()

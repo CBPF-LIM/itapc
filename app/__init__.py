@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+import os
 import ita
 from app import response
 from tools.shortcuts import b
@@ -18,7 +19,10 @@ def doGet():
     data = ita.processGet(q)
     return response.process(data)
 
-if __name__ == '__main__':
+def main():
     port = os.getenv('ITA_PORT', 5000)
     debug = os.getenv('ITA_DEBUG', False)
     app.run(port=port, debug=debug)
+
+if __name__ == '__main__':
+    main()

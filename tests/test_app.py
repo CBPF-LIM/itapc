@@ -10,8 +10,8 @@ from datetime import datetime
 
 os.makedirs('tests/data', exist_ok=True)
 
-os.environ['ITA_OUTPUT_FILE'] = 'tests/files/data_test.csv'
-os.environ['ITA_CONFIG_FILE'] = 'tests/files/config_test.ini'
+os.environ['ITA_OUTPUT_FILE'] = 'tests/data_test.csv'
+os.environ['ITA_CONFIG_FILE'] = 'tests/config_test.ini'
 os.environ['FLASK_RUN_PORT'] = '5001'
 
 from app import app
@@ -27,16 +27,16 @@ def now():
    return formated_time(time.time())
 
 def set_last_index_to(number):
-    with open('tests/files/data_test.csv', 'w') as f:
+    with open('tests/data_test.csv', 'w') as f:
         f.write('"Timestamp"\t"Index"\t"ms"\t"Col1"\t"Col2"\t"Col3"\n')
         f.write(f'"{now()}"\t{number}\t1000\t100\t200\t300\n')
 
 def set_config_file(content):
-    with open('tests/files/config_test.ini', 'w') as f:
+    with open('tests/config_test.ini', 'w') as f:
         f.write(content)
 
 def clear_csv():
-    with open('tests/files/data_test.csv', 'w') as f:
+    with open('tests/data_test.csv', 'w') as f:
         f.write('')
 
 @pytest.fixture
@@ -86,7 +86,7 @@ def test_post(client):
     response = client.post(endpoint, json={'cols': [1,2,3,4]})
     assert response.status_code == 200
 
-    with open('tests/files/data_test.csv', 'r') as f:
+    with open('tests/data_test.csv', 'r') as f:
         f.readline()
         line = f.readline()
 
@@ -100,7 +100,7 @@ def test_post_multiple(client):
     client.post(endpoint, json={'cols': [1,2,3,4]})
     response = client.post(endpoint, json={'cols': [10,20,30,40]})
 
-    line = filelines.last('tests/files/data_test.csv').strip()
+    line = filelines.last('tests/data_test.csv').strip()
     data = line.split('\t')
 
     assert data[1] == '3'

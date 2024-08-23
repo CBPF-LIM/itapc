@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "itapc"
+version = "0.1.0"
+description = "Ita PC has the same functionality as the Ita (AppScript), but it is a PC application."
+authors = ["David Vaz Teixeira <dvt4qb@gmail.com>"]
+readme = "README.md"
+packages = [
+  { include = "app" },
+  { include = "ita" },
+  { include = "tools" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Flask = "^3.0.3"
+requests = "^2.32.3"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+pytest-flask = "^1.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+itapc = "app:main"

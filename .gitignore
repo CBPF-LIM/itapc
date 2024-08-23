@@ -1,6 +1,13 @@
-.venv
+/.venv
 .~*
 *_pycache_*
 
-files/*
-tests/files/*
+/files/*
+/tests/files/*
+/dist
+
+/*.csv
+/*.ini
+
+data_test.csv
+config_test.ini
