@@ -4,27 +4,11 @@ from tools import filelines
 from tools.shortcuts import b
 from datetime import datetime
 
-output_file = ""
-config_file = ""
+settings = {}
 
-if os.path.isfile('app.ini'):
-    with open('app.ini', 'r') as f:
-        for line in f:
-            if line.startswith('output:'):
-                output_file = line.split(':')[1].strip()
-            if line.startswith('config:'):
-                config_file = line.split(':')[1].strip()
-
-if output_file == "":
-  output_file = os.getenv('ITA_OUTPUT_FILE', 'data.csv')
-
-if config_file == "":
-  config_file = os.getenv('ITA_CONFIG_FILE', 'config.ini')
-
-print('Using output file:', output_file)
-print('Using config file:', config_file)
-
-file_folder = 'data'
+def use_settings(new_settings):
+    global settings
+    settings = new_settings
 
 t0 = 0
 first_data = True
@@ -36,21 +20,21 @@ def error(message=None, type='GET'):
     return { 'response': 'error', 'type': type, 'message': message or 'Something went wrong' }
 
 def last_index():
-    if not os.path.isfile(output_file):
+    if not os.path.isfile(settings['output']):
         return 0
-    line = filelines.last(output_file)
+    line = filelines.last(settings['output'])
     return 0 if line == None else int(line.split('\t')[1])
 
 def configs():
     try:
-      with open(config_file, 'r') as f:
+      with open(settings['config'], 'r') as f:
         return ''.join(f.readlines())
     except:
       return None
 
 def config(key):
     try:
-      with open(config_file, 'r') as f:
+      with open(settings['config'], 'r') as f:
         for line in f:
           k, v =  line.split(':')
           k = k.strip()
@@ -65,7 +49,8 @@ def save_data(data):
     global t0
     #try:
 
-    with open(output_file, 'a') as f:
+    #print('settings', settings)
+    with open(settings['output'], 'a') as f:
       if first_data:
         t0 = time.time()
 
