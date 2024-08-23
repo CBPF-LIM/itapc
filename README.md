@@ -5,8 +5,10 @@
 Using pip:
 
 ```sh
-$ pip install git+https://github.com/CBPF-LIM/itapc.git
+$ pip3 install git+https://github.com/CBPF-LIM/itapc.git
 ```
+
+> Note: If "pip3" is not found, try nust "pip"
 
 After install, run itapc lika a normal terminal cmd:
 
