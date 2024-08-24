@@ -61,7 +61,7 @@ def client():
       'config': 'config.ini',
       'host': '127.0.0.2',
       'debug': False,
-      'port': 5000,
+      'port': 6790,
       'app_ini': 'app_test.ini'
     }
 

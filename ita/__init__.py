@@ -57,7 +57,9 @@ def save_data(data):
       t1 = time.time()
       millis = round((t1 - t0)*1000)
 
-      index = last_index() + 1
+      index = data[0]
+      if index == last_index():
+         return error(f'Index <{index}> already exists')
 
       dt_object = datetime.fromtimestamp(t1)
       formatted_t1 = dt_object.strftime('%d/%m/%Y %H:%M:%S')
@@ -65,7 +67,7 @@ def save_data(data):
 
       content = [formatted_t1, index, millis]
 
-      for item in data:
+      for item in data[1:]:
          if type(item) == str:
             content.append(f'"{item}"')
          else:
@@ -78,7 +80,7 @@ def save_data(data):
         col_timestamp = f'"{config("col_timestamp") or "Timestamp"}"'
 
         col_names = [col_timestamp, col_index, col_ms]
-        for n in range(1, len(data) + 1):
+        for n in range(1, len(data[1:]) + 1):
           col_name = config('col' + str(n))
           if col_name:
             col_names.append(f'"{col_name}"')
@@ -91,7 +93,7 @@ def save_data(data):
 
       f.write(joined_string + '\n')
       first_data = False
-    return True
+    return success(True)
     #except:
     #  return None
 
@@ -113,6 +115,6 @@ def processGet(query):
 
 def processPost(data):
     if 'cols' in data:
-        return success(save_data(data['cols']))
+        return save_data(data['cols'])
 
     return error('Invalid data: cols key not found in JSON')

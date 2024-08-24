@@ -3,7 +3,7 @@ def app_ini():
 #
 # Port
 # Integer. Values below 1024 require root access
-port: 5000
+port: 6789
 
 # Host
 #   Options: ip, host or a 'alias':

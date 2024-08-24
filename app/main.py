@@ -29,9 +29,9 @@ def main():
       'output': 'data.csv',
       'output_mode': 'append',
       'config': 'config.ini',
-      'host': '127.0.0.1',
+      'host': '0.0.0.0',
       'debug': False,
-      'port': 5000,
+      'port': 6789,
       'app_ini': 'app.ini'
     }
 
