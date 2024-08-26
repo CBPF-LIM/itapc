@@ -20,6 +20,7 @@ Now you have `app_sample.ini` and `config_sample.ini` files. Rename them (remove
 - [Ita PC](#ita-pc)
   - [Table of Contents](#table-of-contents)
   - [Install](#install)
+  - [ESP32 side](#esp32-side)
   - [The "config tab"](#the-config-tab)
   - [The "data tab"](#the-data-tab)
     - [CSV format](#csv-format)
@@ -61,6 +62,30 @@ $ itapc
 ```
 
 The run folder will be used for data.csv and config.ini
+
+## ESP32 side
+
+This projects needs the [Ita Data Logger ESP32 firmware](https://github.com/CBPF-LIM/ita).
+
+You only need to change this in your sketch and Ita will works with ItaPC:
+
+```c++
+/* From */
+  #define GAS_ID "Google AppScript ID"
+  (...)
+  ita.begin(WIFI_SSID, WIFI_PASSWORD, GAS);
+
+/* to */
+
+  #define END_POINT "http://192.168.0.100:6789/ita/exec"
+  (...)
+  ita.beginURL(WIFI_SSID, WIFI_PASSWORD, END_POINT);
+```
+
+So:
+
+  * `beginURL` in place of `begin`
+  * third param to the [Base URL](#base-url)
 
 ## The "config tab"
 
@@ -165,7 +190,7 @@ This is how you interact with ItaPC.
 
 ### Base URL
 
-If you already use ItaAppscript, just change your "base URL" from:
+If you already use ItaAppscript, in ESP32 side you just change your "base URL" from:
 
 `https://script.google.com/macros/s/<Google Appscript Token>/exec"`
 
@@ -182,6 +207,8 @@ e.g: For
 the base endpoint will be:
 
 `http://192.168.0.100:6789/ita/exec`
+
+You also must change the `begin` to `beginURL`. [Read here](#esp32-side).
 
 ### GET Endpoints
 
