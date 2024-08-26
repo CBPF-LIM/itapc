@@ -10,9 +10,6 @@ def use_settings(new_settings):
     global settings
     settings = new_settings
 
-t0 = 0
-first_data = True
-
 def success(data, type='GET'):
     return { 'response': 'success', 'type': type, 'data': data}
 
@@ -45,27 +42,21 @@ def config(key):
       return None
 
 def save_data(data):
-    global first_data
-    global t0
     #try:
 
     #print('settings', settings)
     with open(settings['output'], 'a') as f:
-      if first_data:
-        t0 = time.time()
-
-      t1 = time.time()
-      millis = round((t1 - t0)*1000)
+      t = time.time()
 
       index = data[0]
       if index == last_index():
          return error(f'Index <{index}> already exists')
 
-      dt_object = datetime.fromtimestamp(t1)
-      formatted_t1 = dt_object.strftime('%d/%m/%Y %H:%M:%S')
-      formatted_t1 = f'"{formatted_t1}"'
+      dt_object = datetime.fromtimestamp(t)
+      formatted_t = dt_object.strftime('%d/%m/%Y %H:%M:%S')
+      formatted_t = f'"{formatted_t}"'
 
-      content = [formatted_t1, index, millis]
+      content = [formatted_t, index]
 
       for item in data[1:]:
          if type(item) == str:
@@ -74,13 +65,12 @@ def save_data(data):
             content.append(item)
 
       if index == 1:
+        col_timestamp = f'"{config("col_timestamp") or "Timestamp"}"'
+        col_index = f'"{config("col_index") or "Index"}"'
         col_ms = f'"{config("col_ms") or "ms"}"'
 
-        col_index = f'"{config("col_index") or "Index"}"'
-        col_timestamp = f'"{config("col_timestamp") or "Timestamp"}"'
-
         col_names = [col_timestamp, col_index, col_ms]
-        for n in range(1, len(data[1:]) + 1):
+        for n in range(1, len(data[1:])):
           col_name = config('col' + str(n))
           if col_name:
             col_names.append(f'"{col_name}"')
@@ -92,7 +82,6 @@ def save_data(data):
       joined_string = '\t'.join(str(item) for item in content)
 
       f.write(joined_string + '\n')
-      first_data = False
     return success(True)
     #except:
     #  return None
