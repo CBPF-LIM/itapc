@@ -8,7 +8,7 @@ def last(filename):
 
       # empty file
       if file_size == 0:
-          print('File is empty')
+          # File is empty
           return None
 
       # single char file
@@ -48,17 +48,17 @@ def last(filename):
           k+=1
           if char1 == b'\r' and char2 == b'\n':
               if(k > 1):
-                print("Windows newline")
+                # "Windows newline"
                 f.seek(3, os.SEEK_CUR)
                 return f.readline().decode()
           elif char1 == b'\n':
               if(k > 1):
-                print("Linux newline")
+                # Linux newline
                 f.seek(2, os.SEEK_CUR)
                 return f.readline().decode()
           elif char1 == b'\r':
               if(k > 1):
-                print("Mac newline")
+                # Mac newline
                 f.seek(2, os.SEEK_CUR)
                 return f.readline().decode()
           try:
