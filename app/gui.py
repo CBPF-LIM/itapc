@@ -1,10 +1,16 @@
-import tkinter as tk
+try:
+    import tkinter as tk
+except ImportError:
+    print("Tkinter is not installed. Please install Tkinter to use this application.")
+    exit()
+
 import tkinter.messagebox as msgbox
 from tkinter import simpledialog
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import subprocess
 import os
+import signal
 import time
 
 class ExitDialog(simpledialog.Dialog):
@@ -38,6 +44,8 @@ class ITAPCGUI(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("ITAPC GUI")
+
+        self.pid_file = 'itapc_server.pid'
 
         self.pid = None
 
@@ -88,17 +96,20 @@ class ITAPCGUI(tk.Tk):
         # To store the row index for the next new row
         self.row_index = 0
 
+        # data.csv file exists:
+        if os.path.exists('data.csv'):
+            self.start_file_monitor()
+            self.update_file_content()
+
         # Check if the server is already running. If running, do nothing. If not, start the server
-        if os.path.exists('server.pid'):
-            with open('server.pid', 'r') as file:
+        if os.path.exists(self.pid_file):
+            with open(self.pid_file, 'r') as file:
                 pid = file.read()
                 remove_pid = False
                 if pid:
                     if self.is_process_running(pid):
                         self.pid = int(pid)
                         self.run_button.config(state=tk.DISABLED)
-                        self.start_file_monitor()
-                        self.update_file_content()
                         msgbox.showinfo("Server running", "PID: " + pid)
                     else:
                         msgbox.showinfo("Server not running", "PID file found but server not running. Removing PID file.")
@@ -106,9 +117,6 @@ class ITAPCGUI(tk.Tk):
 
             if remove_pid:
                 self.remove_pid_file()
-        else:
-            self.start_file_monitor()
-            self.update_file_content()
 
     def server_is_running(self):
         if self.process or self.pid is not None:
@@ -118,11 +126,12 @@ class ITAPCGUI(tk.Tk):
         # Start the ita server
         if self.process is None:
             self.process = subprocess.Popen(
-                # ["itapc"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
-                ["python", "-m" "app.main"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+                ["itapc"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+                #["python", "-m", "app.main"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
             )
-            self.pid = self.process.pid
-            with open('server.pid', 'w') as file:
+            print(self.process.pid)
+            self.pid = int(self.process.pid)
+            with open(self.pid_file, 'w') as file:
                 file.write(str(self.pid))
 
             # disable button:
@@ -199,7 +208,7 @@ class ITAPCGUI(tk.Tk):
             self.process = None
         elif self.pid is not None:
             # The server was already running. Use the PID to kill the process
-            os.kill(self.pid, 2)
+            os.kill(self.pid, signal.SIGTERM)
             while self.is_process_running(self.pid):
                 time.sleep(0.1)
                 pass
@@ -250,11 +259,13 @@ class ITAPCGUI(tk.Tk):
             return False
 
     def remove_pid_file(self):
-        if os.path.exists('server.pid'):
-            os.remove('server.pid')
+        if os.path.exists(self.pid_file):
+            os.remove(self.pid_file)
 
-
-if __name__ == "__main__":
+def main():
     app = ITAPCGUI()
     app.protocol("WM_DELETE_WINDOW", app.on_exit)  # Handle window close
     app.mainloop()
+
+if __name__ == "__main__":
+    main()

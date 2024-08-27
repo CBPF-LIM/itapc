@@ -1,5 +1,6 @@
 import os
 import sys
+import signal
 import time
 from datetime import datetime
 from app import config_parser
@@ -7,6 +8,15 @@ from app import create_app
 from app import samples
 from tools.shortcuts import b
 import ita
+
+def on_exit(sig, frame):
+    print('Exiting')
+    try:
+        os.remove('itapc_server.pid')
+    except:
+        pass
+
+    sys.exit(0)
 
 def process_args():
     for arg in sys.argv:
@@ -22,6 +32,12 @@ def process_args():
             app.settings['app_ini'] = arg.split(':')[1]
 
 def main():
+    signal.signal(signal.SIGINT, on_exit)
+
+
+    with open('itapc_server.pid', 'w') as file:
+        file.write(str(os.getpid()))
+
     app = create_app(ita.processPost, ita.processGet)
     process_args()
 
