@@ -1,0 +1,19 @@
+.menu {
+  margin: 10px 0;
+  padding: 10px 0;
+}
+
+.menu a {
+  background-color: inherit;
+  border: none;
+  color: black;
+
+  font-size: 1em;
+  padding: 10px 15px;
+  margin-right: 10px;
+  text-align: left;
+  text-decoration: none;
+
+  border: 1px solid #e7e7e7;
+  border-radius: 4px;
+}

@@ -1,0 +1,16 @@
+.tools .output.success {
+  color: green;
+}
+
+.tools .output.error {
+  color: red;
+}
+
+.tools .output.animate {
+  animation: fade-in 1s;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; margin-left: 20px;}
+  to { opacity: 1; }
+}

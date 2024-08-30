@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block js %}
+  <script src="/static/js/tools.js"></script>
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="/static/css/tools.css">
+{% endblock %}
+
+{% block content %}
+  <section class="tools">
+    <h1>Data Tools</h1>
+
+    {% include 'nav.html' %}
+
+    <h2>Send data</h2>
+    <div>
+      <label for="cols">Cols</label>
+      <input type="text" id="cols" name="cols" placeholder="Enter columns separated by commas">
+      <button id="post-button">Send</button>
+      <div id="post-output" class="output"></div>
+    </div>
+
+    <h2>Command</h2>
+    <div>
+      <label for="cmd">Cmd:</label>
+      <input type="text" id="cmd" name="cmd" placeholder="Command">
+      <button id="cmd-button">Send</button>
+      <pre id="cmd-output" class="output"></pre>
+    </div>
+
+    <h2>Config</h2>
+    <div>
+      <label for="config">Config</label>
+      <input type="text" id="config" name="config" placeholder="Command">
+      <button id="config-button">Send</button>
+      <pre id="config-output" class="output"></pre>
+    </div>
+  </section>
+
+{% endblock %}

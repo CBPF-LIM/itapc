@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block css %}
+  <link rel="stylesheet" href="/static/css/view.css">
+{% endblock %}
+
+{% block js %}
+  <script src="/static/vendors/socketio/socket.io.min.js"></script>
+  <script src="/static/js/view.js"></script>
+{% endblock %}
+
+{% block content %}
+  <section class="view">
+    <h1>
+      <span id='connection-status'></span>
+      Real-Time Data Viewer
+      <img src="/static/images/loading.svg" id="loading-icon">
+      <img src="/static/images/done.svg" id="done-icon">
+      <div id="status-message">Server appears to be down... Waiting</div>
+    </h1>
+
+    {% include 'nav.html' %}
+
+    <p id="data-info">No data available yet. Please wait...</p>
+
+    <table id="output">
+    </table>
+  </section>
+{% endblock %}

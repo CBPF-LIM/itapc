@@ -8,6 +8,9 @@ from app import samples
 from tools.shortcuts import b
 import ita
 
+import eventlet
+import eventlet.wsgi
+
 def process_args():
     for arg in sys.argv:
         if arg == 'sample':
@@ -23,6 +26,7 @@ def process_args():
 
 def main():
     app = create_app(ita.processPost, ita.processGet)
+
     process_args()
 
     settings = {
@@ -61,11 +65,12 @@ def main():
 
         app.settings['output'] = f'{filename}_{time_formatted}.csv'
 
-    app.run(
-        host=app.settings['host'],
-        port=app.settings['port'],
-        debug=app.settings['debug']
-    )
+    eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 6789)), app)
+    # app.run(
+    #     host=app.settings['host'],
+    #     port=app.settings['port'],
+    #     debug=app.settings['debug']
+    # )
 
 if __name__ == "__main__":
     main()

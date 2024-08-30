@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block css %}
+  <link rel="stylesheet" href="/static/css/logs.css">
+{% endblock %}
+
+{% block content %}
+  <section class="logs">
+    <h1>Logs</h1>
+
+    {% include 'nav.html' %}
+
+    <a href="/ita/view/logs/clear">Clear logs</a>
+
+    <table>
+      <tr>
+        <td>Timestamp</td>
+        <td>Method</td>
+        <td>Message</td>
+      </tr>
+      {% for line in logs %}
+        <tr>
+          {% for col in line.split('\t') %}
+            <td>{{ col }}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </table>
+  </section>
+{% endblock %}

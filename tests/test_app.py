@@ -152,7 +152,7 @@ def test_post_multiple(client):
     client.post(endpoint, json={'cols': [1,2,3,4]})
     response = client.post(endpoint, json={'cols': [10,20,30,40]})
 
-    line = filelines.last('data_test.csv').strip()
+    line = filelines.tail[0]('data_test.csv').strip()
     data = line.split('\t')
 
     assert data[1] == '3'

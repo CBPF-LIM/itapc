@@ -14,6 +14,8 @@ packages = [
 python = "^3.10"
 Flask = "^3.0.3"
 requests = "^2.32.3"
+flask-socketio = "^5.3.6"
+eventlet = "^0.36.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"

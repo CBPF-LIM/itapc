@@ -11,16 +11,23 @@ def use_settings(new_settings):
     settings = new_settings
 
 def success(data, type='GET'):
-    return { 'response': 'success', 'type': type, 'data': data}
+    data = { 'response': 'success', 'type': type, 'data': data}
+    print('data: ', data)
+    return data
 
 def error(message=None, type='GET'):
-    return { 'response': 'error', 'type': type, 'message': message or 'Something went wrong' }
+    data = { 'response': 'error', 'type': type, 'message': message or 'Something went wrong' }
+    return data
 
 def last_index():
     if not os.path.isfile(settings['output']):
         return 0
-    line = filelines.last(settings['output'])
-    return 0 if line == None else int(line.split('\t')[1])
+
+    line = filelines.tail(settings['output'])
+    if line is None:
+        return 0
+
+    return 0 if line[0] == None else int(line[0].split('\t')[1])
 
 def configs():
     try:
@@ -41,16 +48,37 @@ def config(key):
     except:
       return None
 
+def validate_index(index):
+    index = int(index)
+    last_file_index = last_index()
+    if index == last_file_index:
+       return f'Index [{index}] already exists'
+
+    if index < last_file_index:
+       return f'Index [{index}] is less than last index [{last_file_index}]'
+
+    if index > last_file_index + 1:
+       return f'Received index [{index}] but next index should be [{last_file_index + 1}]'
+
+    return None
+
 def save_data(data):
     #try:
 
     #print('settings', settings)
+
+    new_file = False
+    if os.path.isfile(settings['output']) == False:
+      new_file = True
+
     with open(settings['output'], 'a') as f:
       t = time.time()
 
       index = data[0]
-      if index == last_index():
-         return error(f'Index <{index}> already exists')
+
+      index_error = validate_index(index)
+      if index_error:
+        return error(index_error, 'POST')
 
       dt_object = datetime.fromtimestamp(t)
       formatted_t = dt_object.strftime('%d/%m/%Y %H:%M:%S')
@@ -64,7 +92,7 @@ def save_data(data):
          else:
             content.append(item)
 
-      if index == 1:
+      if new_file:
         col_timestamp = f'"{config("col_timestamp") or "Timestamp"}"'
         col_index = f'"{config("col_index") or "Index"}"'
         col_ms = f'"{config("col_ms") or "ms"}"'
@@ -82,7 +110,7 @@ def save_data(data):
       joined_string = '\t'.join(str(item) for item in content)
 
       f.write(joined_string + '\n')
-    return success(True)
+    return success(content, 'POST')
     #except:
     #  return None
 
@@ -106,4 +134,4 @@ def processPost(data):
     if 'cols' in data:
         return save_data(data['cols'])
 
-    return error('Invalid data: cols key not found in JSON')
+    return error('Invalid data')
