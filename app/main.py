@@ -65,7 +65,10 @@ def main():
 
         app.settings['output'] = f'{filename}_{time_formatted}.csv'
 
-    eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 6789)), app)
+    host=app.settings['host']
+    port=app.settings['port']
+
+    eventlet.wsgi.server(eventlet.listen((host, port)), app)
     # app.run(
     #     host=app.settings['host'],
     #     port=app.settings['port'],
