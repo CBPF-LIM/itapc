@@ -24,7 +24,7 @@ def process_post(payload):
         data = { 'response': 'error', 'type': 'POST', 'message': error }
         return jsonify(data), 404
 
-    return jsonify(payload['data']), 200
+    return jsonify({'response': 'success'}), 200
 
 def process(data):
     if data['type'] == 'GET':
