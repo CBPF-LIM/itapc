@@ -63,5 +63,9 @@ def create_app(processPost, processGet):
     def view_tools():
         return render_template('tools.html')
 
+    @app.route('/', methods=['GET'])
+    def app_index():
+        return redirect('/ita/view')
+
 
     return app
