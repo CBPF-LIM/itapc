@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, render_template, redirect
+import jinja_partials
 from flask_socketio import SocketIO, emit
 
 from app import response
@@ -8,6 +9,8 @@ import os
 
 def create_app(processPost, processGet):
     app = Flask(__name__)
+    jinja_partials.register_extensions(app)
+
     app.config['SECRET_KEY'] = 'app_secret_key'
     socketio = SocketIO(app, async_mode='eventlet')
     emitter = socketio.emit
@@ -17,7 +20,9 @@ def create_app(processPost, processGet):
     def doPost():
         data = processPost(request.json)
         processed_data = response.process(data)
-        emitter('done')
+
+        if data['response'] == 'success':
+            emitter('done', data)
 
         return processed_data
 
