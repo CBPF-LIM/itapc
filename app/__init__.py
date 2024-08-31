@@ -42,8 +42,12 @@ def create_app(processPost, processGet):
 
     @app.route('/ita/view/logs', methods=['GET'])
     def view_logs():
-        with open('error.log', 'r') as f:
-            logs = f.readlines()
+        # open error log if exists
+        if os.path.exists('error.log'):
+            with open('error.log', 'r') as f:
+                logs = f.readlines()
+        else:
+            logs = []
 
         return render_template('logs.html', logs=logs)
 
