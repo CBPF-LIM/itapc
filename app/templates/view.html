@@ -12,18 +12,30 @@
 {% block content %}
   <section class="view">
     <h1>
-      <span id='connection-status'></span>
-      Real-Time Data Viewer
-      <img src="/static/images/loading.svg" id="loading-icon">
-      <img src="/static/images/done.svg" id="done-icon">
-      <div id="status-message">Server appears to be down... Waiting</div>
+      Data Viewer
     </h1>
 
-    {% include 'nav.html' %}
+    <div class="alert alert-danger" role="alert" id="status-message">
+      Server appears to be down. Waiting ...
+    </div>
+
+    <ul class="status">
+      <li>
+        <i class="fs-3 bi-router" id="connection-status"></i>
+      </li>
+      <li>
+        <i class="fs-3 bi-cloud-download-fill" id="loading-icon"></i>
+      </li>
+    </ul>
+
+
+    <hr>
 
     <p id="data-info">No data available yet. Please wait...</p>
 
-    <table id="output">
+    <table id="output-table" class="table table-striped table-condensed table-responsive table-hover table-bordered">
+      <tbody id="output">
+      </tbody>
     </table>
   </section>
 {% endblock %}

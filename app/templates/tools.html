@@ -12,30 +12,55 @@
   <section class="tools">
     <h1>Data Tools</h1>
 
-    {% include 'nav.html' %}
-
-    <h2>Send data</h2>
-    <div>
-      <label for="cols">Cols</label>
-      <input type="text" id="cols" name="cols" placeholder="Enter columns separated by commas">
-      <button id="post-button">Send</button>
-      <div id="post-output" class="output"></div>
+    <h2>Cols</h2>
+    <div class="row">
+      <div class="col-md-6 col-xs-12">
+        <div class="input-group mb-3">
+          <button class="btn btn-outline-secondary" type="button" id="post-button">Send</button>
+          <input id="cols" name="cols" type="text" class="form-control" placeholder="1,2,3,4">
+        </div>
+      </div>
+      <div class="col-md-6 col-xs-12">
+        <div class="card">
+          <div class="card-body">
+            <pre id="post-output" class="output"></pre>
+          </div>
+        </div>
+      </div>
     </div>
 
     <h2>Command</h2>
-    <div>
-      <label for="cmd">Cmd:</label>
-      <input type="text" id="cmd" name="cmd" placeholder="Command">
-      <button id="cmd-button">Send</button>
-      <pre id="cmd-output" class="output"></pre>
+    <div class="row">
+      <div class="col-md-6 col-xs-12">
+        <div class="input-group mb-3">
+          <button class="btn btn-outline-secondary" type="button" id="cmd-button">Send</button>
+          <input id="cmd" name="cmd" type="text" class="form-control" placeholder="configs">
+        </div>
+      </div>
+      <div class="col-md-6 col-xs-12">
+        <div class="card">
+          <div class="card-body">
+            <pre id="cmd-output" class="output"></pre>
+          </div>
+        </div>
+      </div>
     </div>
 
     <h2>Config</h2>
-    <div>
-      <label for="config">Config</label>
-      <input type="text" id="config" name="config" placeholder="Command">
-      <button id="config-button">Send</button>
-      <pre id="config-output" class="output"></pre>
+    <div class="row">
+      <div class="col-md-6 col-xs-12">
+        <div class="input-group mb-3">
+          <button class="btn btn-outline-secondary" type="button" id="config-button">Send</button>
+          <input id="config" name="config" type="text" class="form-control" placeholder="">
+        </div>
+      </div>
+      <div class="col-md-6 col-xs-12">
+        <div class="card">
+          <div class="card-body">
+            <pre id="config-output" class="output"></pre>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

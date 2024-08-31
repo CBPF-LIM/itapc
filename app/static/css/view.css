@@ -1,16 +1,9 @@
 .view #connection-status {
-  display: inline-block;
-  font-size: 1.5em;
-  font-weight: bold;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 50%;
-  margin-right: 5px;
-  background-color: red;
+  color: red;
 }
 
 .view #connection-status.on {
-  background-color: green;
+  color: green;
 }
 
 .view #status-message {
@@ -22,20 +15,12 @@
   display: None;
 }
 
-.view #output {
-  margin-top: 10px;
-  width: auto;
-  table-layout: auto;
-  border-collapse: collapse;
+.view #output-table {
+  width: auto
 }
 
 .view #output tr:first-child {
   font-weight: bold;
-}
-
-.view #output td {
-  border: 1px solid black;
-  padding: 5px;
 }
 
 .view #data-info {
@@ -47,42 +32,30 @@
   display: None;
 }
 
+/* ul without icon, li in horizontal */
+.view .status {
+  padding-left: 0;
+  list-style-type: none;
+}
+
+.view .status li {
+  display: inline;
+}
+
 #loading-icon {
-  height: 1rem;
-  z-index: 1000;
-  display: none;
-}
-
-#loading-icon.spin {
-  animation: rotation 1s infinite linear;
-  display: inline-block;
-}
-
-@keyframes rotation {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-#done-icon {
-  height: 1rem;
-  z-index: 1000;
-  display: inline-block;
   opacity: 0;
 }
 
-#done-icon.animate {
-  animation: done 1.5s ease;
+#loading-icon.spin {
+  animation: done infinite 1s;
+  color: red;
+}
+
+#loading-icon.done {
+  color: green;
 }
 
 @keyframes done {
-  16.67% { opacity: 1; }
-  33.33% { opacity: 0; }
-  50.0%  { opacity: 1; }
-  66.67% { opacity: 0; }
-  83.33% { opacity: 1; }
-  100.0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
 }

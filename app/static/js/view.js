@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
   var status_message = document.getElementById('status-message');
   var first_connection = true;
   var loading = document.getElementById('loading-icon');
-  var done = document.getElementById('done-icon');
   var max_index = 0;
 
   function appendOutput(data) {
@@ -34,17 +33,24 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 
   function reload() {
-    alert('Server reconnected. Refreshing page to get new data.');
-    location.reload();
+    setTimeout(function() {
+      alert('Server reconnected. Refreshing page to get new data.');
+      location.reload();
+    }, 100);
   }
 
   function stop_spinner() {
     setTimeout(function() {
+      loading.classList.add('done');
+    }, 500);
+
+    setTimeout(function() {
       loading.classList.remove('spin');
-    }, 1000);
+    }, 3000);
   }
 
   function start_spinner() {
+    loading.classList.remove('done');
     loading.classList.add('spin');
   }
 
@@ -68,11 +74,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   socket.on('connect', function() {
       start_spinner();
-      first_connection ? get_data() : reload();
-      first_connection = false;
-
       status.classList.add('on');
       status_message.classList.add('on');
+
+      first_connection ? get_data() : reload();
+      first_connection = false;
   });
 
   socket.on('disconnect', function() {
@@ -82,9 +88,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
   });
 
   socket.on('done', function() {
+    start_spinner();
     get_data();
-    done.classList.remove('animate');
-    void done.offsetWidth; // Trigger reflow to restart animation
-    done.classList.add('animate');
+    stop_spinner();
   });
 });

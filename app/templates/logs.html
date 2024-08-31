@@ -8,16 +8,21 @@
   <section class="logs">
     <h1>Logs</h1>
 
-    {% include 'nav.html' %}
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#error-modal">
+      <i class="bi-trash"></i>
+    </button>
 
-    <a href="/ita/view/logs/clear">Clear logs</a>
+    <hr>
 
-    <table>
-      <tr>
-        <td>Timestamp</td>
-        <td>Method</td>
-        <td>Message</td>
-      </tr>
+    <table class="table table-striped table-condensed table-responsive table-hover table-bordered ">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>Method</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody>
       {% for line in logs %}
         <tr>
           {% for col in line.split('\t') %}
@@ -25,6 +30,10 @@
           {% endfor %}
         </tr>
       {% endfor %}
+      </tbody>
     </table>
+
+    {{ render_partial('_modal.html', id="error-modal", title="Clear Logs", text="File 'error.log' will be removed. Continue?", action="/ita/view/logs/clear") }}
+
   </section>
 {% endblock %}
