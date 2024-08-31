@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }).then(function(response) {
       return response.json();
     }).then(function(data) {
-      data.response == 'success' ? data_success(post_output, data.message) : data_error(post_output, data.message);
+      data.response == 'success' ? data_success(post_output, "Ok") : data_error(post_output, data.message);
     }).catch(function(error) {
       alert('Error: ' + error);
     })
