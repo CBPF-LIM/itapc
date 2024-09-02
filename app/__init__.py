@@ -37,6 +37,64 @@ def create_app(processPost, processGet):
     def view_route():
         return render_template('view.html')
 
+    @app.route('/ita/view/chart')
+    def view_chart():
+        with open('data.csv', 'r') as f:
+            line = f.readline()
+
+        headers = line.strip().split('\t')
+        headers = [ h.strip().strip('"') for h in headers ]
+
+        return render_template('chart.html', headers=headers)
+
+    @app.route('/ita/view/chart/data', methods=['POST'])
+    def view_chart_data():
+        x = request.json['x']
+        y = request.json['y']
+        #n = request.json['n']
+
+        with open('data.csv', 'r') as f:
+            lines = f.readlines()
+
+        headers = lines[0].split('\t')
+
+        x_index = -1
+        y_index = -1
+
+        i = 0
+        for header in headers:
+            col = header.strip().strip('"')
+            print('header:', col)
+            print('x:', x)
+            print('y:', y)
+            if col == x:
+                print('found x')
+                x_index = i
+            if col.strip('"') == y:
+                print('found y')
+                y_index = i
+            i += 1
+
+        x_data = []
+        y_data = []
+
+        x_data = []
+        y_data = []
+        for line in lines[1:]:
+            data = line.strip().split('\t')
+            x_data.append(data[x_index])
+            y_data.append(data[y_index])
+
+        x_data = [ str(d).strip().strip('"') for d in x_data ]
+        y_data = [ str(d).strip().strip('"') for d in y_data ]
+
+        print('x_data:', x_data)
+        print('y_data:', y_data)
+
+
+        return jsonify({'x': x_data, 'y': y_data })
+
+
     @app.route('/ita/view/lines/from_index/<int:index>', methods=['GET'])
     def view_from(index):
         lines = tail_index('data.csv', index)
