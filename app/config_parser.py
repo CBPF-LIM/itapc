@@ -38,12 +38,6 @@ def str_to_bool(s):
     message = f'Invalid value for boolean: <{s}>. TRUE is <{true_values}> and FALSE is <{false_values}>'
     return {'error': message}
 
-def print_settings(settings):
-    print('> App configuration loaded:')
-    print('-' * 25)
-    for key, value in settings.items():
-        print(f'- {key}: {value}')
-
 def load(settings):
     settings_types = {
       'output': str,
@@ -105,8 +99,5 @@ def load(settings):
         print()
         print('(!) Fix the errors and try again.')
         exit()
-
-
     else:
-        print_settings(settings)
         return settings

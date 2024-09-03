@@ -1,4 +1,3 @@
-import json
 import time
 from tools.shortcuts import b
 from flask import jsonify

@@ -6,12 +6,27 @@ from app import config_parser
 from app import create_app
 from app import samples
 from tools.shortcuts import b
-import ita
 
-import eventlet
-import eventlet.wsgi
+def print_hash(d):
+    m = 0
+    for k, v in d.items():
+        m = max(m, len(k))
 
-def process_args():
+    for key in sorted(d):
+        print(f'  - {key.ljust(m)} = {d[key]}')
+
+def div(title, d={}):
+    formatted_title = '- ' + title
+    if d == {}:
+        print(formatted_title)
+    else:
+        print(formatted_title + ':')
+        print_hash(d)
+
+
+def process_args(default_settings={}):
+    settings = default_settings
+
     for arg in sys.argv:
         if arg == 'sample':
             with open('config_sample.ini', 'w') as f:
@@ -22,14 +37,47 @@ def process_args():
 
             exit()
         if arg.startswith('app_ini:'):
-            app.settings['app_ini'] = arg.split(':')[1]
+            settings['app_ini'] = arg.split(':')[1]
+
+    processed_settings = process_settings(settings)
+
+    return processed_settings
+
+def process_settings(settings):
+    parsed_settings = config_parser.load(settings)
+
+    div('Ita PC is running')
+
+    if parsed_settings['output_mode'] == 'append':
+        pass
+
+    if parsed_settings['output_mode'] == 'fresh':
+        try:
+            os.remove(parsed_settings['output'])
+        except:
+            print(f'>>> Cannot remove file {parsed_settings["output"]}')
+
+    if parsed_settings['output_mode'] == 'timestamp':
+        filename = parsed_settings['output']
+
+        dt_object = datetime.fromtimestamp(time.time())
+        time_formatted = dt_object.strftime('%Y%m%d%H%M%S')
+
+        parsed_settings['output'] = f'{filename}_{time_formatted}.csv'
+
+    if 'app_key' not in parsed_settings:
+        parsed_settings['secret'] = 'app_secret_key_CHANGE_ME'
+
+    return parsed_settings
+
+def config_from_settings(settings):
+    config = {}
+    config['SECRET_KEY'] = settings['secret']
+
+    return config
 
 def main():
-    app = create_app(ita.processPost, ita.processGet)
-
-    process_args()
-
-    settings = {
+    default_settings = {
       'output': 'data.csv',
       'output_mode': 'append',
       'config': 'config.ini',
@@ -39,41 +87,16 @@ def main():
       'app_ini': 'app.ini'
     }
 
-    app.settings = config_parser.load(settings)
+    settings = process_args(default_settings)
+    config = config_from_settings(settings)
 
-    print('Ita PC is running')
-    print('-' * 25)
-    ita.use_settings(app.settings)
-    print('-' * 25)
-    print('> Starting server')
-    print('-' * 25)
+    div('Settings', settings)
+    div('Config', config)
+    app, socketio = create_app(settings, config)
 
-    if app.settings['output_mode'] == 'append':
-        pass
-
-    if app.settings['output_mode'] == 'fresh':
-        try:
-            os.remove(app.settings['output'])
-        except:
-            print(f'>>> Cannot remove file {app.settings["output"]}')
-
-    if app.settings['output_mode'] == 'timestamp':
-        filename = app.settings['output']
-
-        dt_object = datetime.fromtimestamp(time.time())
-        time_formatted = dt_object.strftime('%Y%m%d%H%M%S')
-
-        app.settings['output'] = f'{filename}_{time_formatted}.csv'
-
-    host=app.settings['host']
-    port=app.settings['port']
-
-    eventlet.wsgi.server(eventlet.listen((host, port)), app)
-    # app.run(
-    #     host=app.settings['host'],
-    #     port=app.settings['port'],
-    #     debug=app.settings['debug']
-    # )
+    div('Server running')
+    print('-' * 17)
+    socketio.run(app, host=settings['host'], port=settings['port'], debug=settings['debug'])
 
 if __name__ == "__main__":
     main()
