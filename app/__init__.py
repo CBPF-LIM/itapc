@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template, redirect
 import jinja_partials
 from flask_socketio import SocketIO, emit
 
+from app.configs import base
 from app import response
 from tools.shortcuts import b
 from tools.filelines import tail_index, lines2rowcol
@@ -35,6 +36,7 @@ def create_app(processPost, processGet):
 
     @app.route('/ita/view')
     def view_route():
+        breakpoint()
         return render_template('view.html')
 
     @app.route('/ita/view/chart')
