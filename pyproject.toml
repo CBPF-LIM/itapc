@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "itapc"
-version = "0.1.0"
+version = "0.1.1"
 description = "Ita PC has the same functionality as the Ita (AppScript), but it is a PC application."
 authors = ["David Vaz Teixeira <dvt4qb@gmail.com>"]
 readme = "README.md"
