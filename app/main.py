@@ -14,10 +14,10 @@ import eventlet.wsgi
 def process_args():
     for arg in sys.argv:
         if arg == 'sample':
-            with open('config_sample.ini', 'w') as f:
+            with open('app_sample.ini', 'w') as f:
                 f.write(samples.app_ini())
 
-            with open('app_sample.ini', 'w') as f:
+            with open('config_sample.ini', 'w') as f:
                 f.write(samples.config_ini())
 
             exit()
