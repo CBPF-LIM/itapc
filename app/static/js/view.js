@@ -6,30 +6,55 @@ document.addEventListener('DOMContentLoaded', (event) => {
   var loading = document.getElementById('loading-icon');
   var max_index = 0;
 
+  var followCheckbox = document.getElementById('follow-checkbox');
+
+  followCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+  })
+
   function appendOutput(data) {
     var table = document.getElementById('output');
 
-    var rows = data;
+    var rows = data.cols;
+    var header = data.header;
 
     if(rows.length) {
       var data_info = document.getElementById('data-info');
       data_info.classList.add('has');
     }
 
+    if(header) {
+      var tr = document.createElement('tr');
+      for(var i = 0; i < header.length; i++) {
+        var item = String(header[i]);
+        var th = document.createElement('th');
+        th.innerHTML = item;
+        tr.appendChild(th);
+      }
+      table.appendChild(tr);
+    }
+
     for(var i = 0; i < rows.length; i++) {
-      var cols = rows[i];
+      var id = rows[i]['id']
+      var cols = rows[i]['cols']
+
       var tr = document.createElement('tr');
       for(var j = 0; j < cols.length; j++) {
         var item = String(cols[j])
-        if(j == 1) max_index = parseInt(item)
-        item = item.replace(/^"(.*)"$/, '$1');
         var td = document.createElement('td');
         td.innerHTML = item;
         tr.appendChild(td);
       }
       table.appendChild(tr);
     }
+    max_index = rows[rows.length - 1]['id'];
 
+    var followCheckbox = document.getElementById('follow-checkbox');
+    if (followCheckbox && followCheckbox.checked && (window.scrollY + window.innerHeight + 50 >= document.body.offsetHeight)) {
+      window.scrollTo(0, document.body.scrollHeight);
+    }
   }
 
   function reload() {
@@ -64,7 +89,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       })
       .then(function(data) {
         if(data.response == 'success') {
-          appendOutput(data.data);
+          appendOutput(data);
         }
       })
       .catch(function(error) {

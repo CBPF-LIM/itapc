@@ -1,11 +1,12 @@
 import os
 from flask import Blueprint, request, jsonify, render_template, redirect, current_app, url_for
 from tools.filelines import tail_index, lines2rowcol
+from ita.models import Experiment, Device, Data
 
 bp = Blueprint('view', __name__)
 
-def emitter():
-    return current_app.socketio.emit
+def emitter(event, data):
+    return current_app.socketio.emit(event, data)
 
 @bp.route('/')
 def view_route():
@@ -13,6 +14,7 @@ def view_route():
 
 @bp.route('/chart')
 def view_chart():
+
     with open('data.csv', 'r') as f:
         line = f.readline()
 
@@ -59,9 +61,12 @@ def view_chart_data():
 
 @bp.route('/lines/from_index/<int:index>', methods=['GET'])
 def view_from(index):
-    lines = tail_index('data.csv', index)
-    rows = lines2rowcol(lines)
-    data = { 'response': 'success', 'type': 'GET', 'data': rows }
+    rows = Data.select().where(Data.id >= index)
+    cols = [ {"id": d.id, "cols": d.cols} for d in rows]
+    data = {'response': 'success', 'type': 'GET', 'cols': cols}
+
+    if index == 0:
+        data['header'] = rows.first().experiment.header
 
     return jsonify(data)
 

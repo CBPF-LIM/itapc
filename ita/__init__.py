@@ -90,11 +90,7 @@ def save_data(data):
       _cols=json.dumps(data["cols"])
   )
 
-  response = jsonify({
-    "message": "Data stored",
-    "data_id": d.id,
-    "experiment_id": experiment.id
-  })
+  response = data["cols"]
 
   # index_error = validate_index(index)
   # if index_error:
