@@ -4,8 +4,8 @@ import ita
 
 bp = Blueprint('api', __name__)
 
-def emitter():
-    return current_app.socketio.emit
+def emitter(event, data):
+    return current_app.socketio.emit(event, data)
 
 @bp.route('/', methods=['POST'])
 def doPost():
@@ -13,7 +13,7 @@ def doPost():
     processed_data = response.process(data)
 
     if data['response'] == 'success':
-        emitter()
+        emitter('done', data)
 
     return processed_data
 
