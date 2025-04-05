@@ -13,7 +13,7 @@ def doPost():
     processed_data = response.process(data)
 
     if data['response'] == 'success':
-        emitter('done', data)
+        emitter()
 
     return processed_data
 
