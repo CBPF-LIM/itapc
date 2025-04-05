@@ -1,8 +1,11 @@
 import os
+import json
 import time
 from tools import filelines
 from tools.shortcuts import b
 from datetime import datetime
+import ita.models as models
+from flask import jsonify
 
 settings = {}
 
@@ -63,56 +66,41 @@ def validate_index(index):
     return None
 
 def save_data(data):
-    #try:
+  experiment = models.Experiment.get_or_none(models.Experiment.name == data["experiment"])
 
-    #print('settings', settings)
+  if not experiment:
+    experiment = models.Experiment.create(
+        name=data["experiment"]
+    )
 
-    new_file = False
-    if os.path.isfile(settings['output']) == False:
-      new_file = True
+  device = models.Device.get_or_none(models.Device.hash == data["device"])
 
-    with open(settings['output'], 'a') as f:
-      t = time.time()
+  if not device:
+    device = models.Device.create(
+      hash=data["device"]
+    )
 
-      index = data[0]
+  # Create Data entry
+  d = models.Data.create(
+      experiment=experiment,
+      device=device,
+      t0=data["t0"],
+      t1=data["t1"],
+      timestamp=datetime.now(),
+      _cols=json.dumps(data["cols"])
+  )
 
-      index_error = validate_index(index)
-      if index_error:
-        return error(index_error, 'POST')
+  response = jsonify({
+    "message": "Data stored",
+    "data_id": d.id,
+    "experiment_id": experiment.id
+  })
 
-      dt_object = datetime.fromtimestamp(t)
-      formatted_t = dt_object.strftime('%d/%m/%Y %H:%M:%S')
-      formatted_t = f'"{formatted_t}"'
+  # index_error = validate_index(index)
+  # if index_error:
+  #   return error(index_error, 'POST')
 
-      content = [formatted_t, index]
-
-      for item in data[1:]:
-         if type(item) == str:
-            content.append(f'"{item}"')
-         else:
-            content.append(item)
-
-      if new_file:
-        col_timestamp = f'"{config("col_timestamp") or "Timestamp"}"'
-        col_index = f'"{config("col_index") or "Index"}"'
-        col_ms = f'"{config("col_ms") or "ms"}"'
-
-        col_names = [col_timestamp, col_index, col_ms]
-        for n in range(1, len(data[1:])):
-          col_name = config('col' + str(n))
-          if col_name:
-            col_names.append(f'"{col_name}"')
-          else:
-            col_names.append(f'"col{n}"')
-
-        f.write('\t'.join(col_names) + '\n')
-
-      joined_string = '\t'.join(str(item) for item in content)
-
-      f.write(joined_string + '\n')
-    return success(content, 'POST')
-    #except:
-    #  return None
+  return success(response, 'POST')
 
 def processGet(query):
     if 'cmd' in query:
@@ -132,6 +120,6 @@ def processGet(query):
 
 def processPost(data):
     if 'cols' in data:
-        return save_data(data['cols'])
+        return save_data(data)
 
     return error('Invalid data')
