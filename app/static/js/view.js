@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   function get_data() {
     var experiment_id = document.getElementById('experiment-id').dataset.id;
     var fetch_index = max_index ? max_index + 1: 0;
-    var url = `/ita/view/table/${experiment_id}/refresh/${fetch_index}`
+    var url = `/ita/view/api/experiments/${experiment_id}/refresh/${fetch_index}`
     fetch(url)
       .then(function(response) {
         stop_spinner();

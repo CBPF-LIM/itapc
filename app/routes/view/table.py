@@ -1,6 +1,6 @@
 import os
-from flask import Blueprint, jsonify, render_template, current_app
-from ita.models import Experiment, Device, Data
+from flask import Blueprint, render_template, current_app
+from ita.models import Experiment
 
 BLUEPRINT = 'view_table'
 TEMPLATE_BASE = 'view/table'
@@ -23,15 +23,3 @@ def show(id):
     experiment = Experiment.get_or_none(Experiment.id == id)
 
     return render('show', experiment=experiment)
-
-
-@bp.route('/<int:id>/refresh/<int:index>')
-def refresh(id, index):
-    rows = Data.select().where(Data.id >= index)
-    cols = [ {"id": d.id, "cols": d.cols} for d in rows]
-    data = {'response': 'success', 'type': 'GET', 'cols': cols}
-
-    if index == 0:
-        data['header'] = rows.first().experiment.header
-
-    return jsonify(data)
