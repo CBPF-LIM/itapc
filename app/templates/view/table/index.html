@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Data Table</h1>
+  <hr>
+
+  <table class="table table-striped table-responsive">
+      <thead>
+          <tr>
+              <th scope="col">Experiment Name</th>
+              <th scope="col">Actions</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for experiment in experiments %}
+          <tr>
+              <td>{{ experiment.name }}</td>
+              <td>
+                  <a href="{{ url_for('view_table.show', id=experiment.id) }}">
+                      View
+                  </a>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+
+{% endblock %}

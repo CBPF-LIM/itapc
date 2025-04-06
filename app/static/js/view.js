@@ -27,6 +27,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     if(header) {
       var tr = document.createElement('tr');
+
+      var th = document.createElement('th');
+      th.innerHTML = "ID";
+      tr.appendChild(th);
+
       for(var i = 0; i < header.length; i++) {
         var item = String(header[i]);
         var th = document.createElement('th');
@@ -41,6 +46,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
       var cols = rows[i]['cols']
 
       var tr = document.createElement('tr');
+
+      var td = document.createElement('td');
+      td.innerHTML = id;
+      tr.appendChild(td);
+
       for(var j = 0; j < cols.length; j++) {
         var item = String(cols[j])
         var td = document.createElement('td');
@@ -59,8 +69,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   function reload() {
     setTimeout(function() {
-      alert('Server reconnected. Refreshing page to get new data.');
-      location.reload();
+      console.log('Server reconnected');
+      get_data();
     }, 100);
   }
 
@@ -80,9 +90,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 
   function get_data() {
+    var experiment_id = document.getElementById('experiment-id').dataset.id;
     var fetch_index = max_index ? max_index + 1: 0;
-    //fetch('http://' + document.location.hostname + ':' + location.port + '/ita/view/lines/from_index/' + (fetch_index))
-    fetch('/ita/view/lines/from_index/' + (fetch_index))
+    var url = `/ita/view/table/${experiment_id}/refresh/${fetch_index}`
+    fetch(url)
       .then(function(response) {
         stop_spinner();
         return response.json();
