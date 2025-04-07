@@ -8,7 +8,7 @@ from playhouse.sqlite_ext import JSONField
 db = SqliteDatabase("ita.db")
 
 # Define a custom JSON property for the model
-def json_property(attr_name, default=None):
+def json_property(attr_name, default={}):
     def getter(self):
         raw = getattr(self, attr_name)
         if raw is None:

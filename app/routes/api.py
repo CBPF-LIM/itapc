@@ -13,7 +13,10 @@ def doPost():
     processed_data = response.process(data)
 
     if data['response'] == 'success':
-        emitter('done', data)
+        channel = data.get('data', 'done').get('channel', 'done')
+        print(f"Emitting to channel: {channel}")
+        print(f"Data: {data}")
+        emitter(channel, data)
 
     return processed_data
 

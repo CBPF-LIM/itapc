@@ -69,8 +69,12 @@ def save_data(data):
   experiment = models.Experiment.get_or_none(models.Experiment.name == data["experiment"])
 
   if not experiment:
+    number_of_cols = len(data["cols"])
+    header = [f"Col {i+1}" for i in range(number_of_cols)]
+
     experiment = models.Experiment.create(
-        name=data["experiment"]
+        name=data["experiment"],
+        header=json.dumps(header)
     )
 
   device = models.Device.get_or_none(models.Device.hash == data["device"])
@@ -90,7 +94,7 @@ def save_data(data):
       _cols=json.dumps(data["cols"])
   )
 
-  response = data["cols"]
+  response = {'channel': f'update-{experiment.id}'}
 
   # index_error = validate_index(index)
   # if index_error:

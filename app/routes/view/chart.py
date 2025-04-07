@@ -1,18 +1,14 @@
 import os
 import json
-from flask import Blueprint, render_template, current_app
-from ita.models import Experiment
+from flask import Blueprint, request, jsonify, render_template, redirect, current_app, url_for
+from ita.models import Experiment, Device, Data
 
-BLUEPRINT = 'view_table'
-TEMPLATE_BASE = 'view/table'
-
+BLUEPRINT = 'view_chart'
+TEMPLATE_BASE = 'view/chart'
 bp = Blueprint(BLUEPRINT, __name__)
 
 def render(template_name, *args, **kwargs):
     return render_template(f'{TEMPLATE_BASE}/{template_name}.html', *args, **kwargs)
-
-def emitter(event, data):
-    return current_app.socketio.emit(event, data)
 
 @bp.route('/')
 def index():
