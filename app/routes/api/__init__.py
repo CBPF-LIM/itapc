@@ -2,6 +2,11 @@ from flask import Blueprint, request, current_app
 from app import response
 import ita
 
+
+BLUEPRINT = 'api'
+TEMPLATE_BASE = 'api'
+bp = Blueprint(BLUEPRINT, __name__)
+
 bp = Blueprint('api', __name__)
 
 def emitter(event, data):

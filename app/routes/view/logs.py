@@ -19,9 +19,11 @@ def index():
 
     return render('index', logs=logs)
 
-@bp.route('/clear', methods=['GET'])
+@bp.route('/destroy', methods=['GET'])
 def destroy():
     with open('error.log', 'w') as f:
         f.write('')
+
+    print('Error log destroyed')
 
     return redirect(url_for('view_logs.index'))

@@ -26,7 +26,7 @@ config: config_test.ini
 
 from app import main
 
-endpoint = 'http://localhost:5001/ita/exec'
+endpoint = 'http://localhost:5001/api'
 
 def formated_time(t):
   dt_object = datetime.fromtimestamp(t)

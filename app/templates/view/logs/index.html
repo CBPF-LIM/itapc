@@ -33,7 +33,7 @@
       </tbody>
     </table>
 
-    {{ render_partial('view/logs/_modal.html', id="error-modal", title="Clear Logs", text="File 'error.log' will be removed. Continue?", action="/ita/view/logs/clear") }}
+    {{ render_partial('view/logs/_modal.html', id="error-modal", title="Clear Logs", text="File 'error.log' will be removed. Continue?", action=url_for('view_logs.destroy')) }}
 
   </section>
 {% endblock %}

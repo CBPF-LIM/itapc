@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   async function get_data() {
     var fetch_index = (max_index || 0) + 1;
-    var url = `/ita/view/api/experiments/${experiment_id}/refresh/${fetch_index}`
+    var url = `/view/api/experiments/${experiment_id}/refresh/${fetch_index}`
     await fetch(url)
       .then(function(response) {
         stop_spinner();

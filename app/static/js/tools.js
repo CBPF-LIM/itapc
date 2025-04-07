@@ -1,3 +1,11 @@
+/* TODO:
+ *    - Settings still comes from a file config.ini
+ *    - move config and to database
+ *    - "cmd" and "config" route must be change in api (processGet in ita/__init__.py)
+ *    - update route api routes
+ *
+ */
+
 document.addEventListener('DOMContentLoaded', (event) => {
   // 1. intercept form id send post
   // 2. get cols field
@@ -40,7 +48,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   post_button.addEventListener('click', function(event) {
     var processed_cols = cols.value.split(',');
     var json_data = {cols: processed_cols};
-    fetch('/ita/exec', {
+    fetch('/api', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -56,7 +64,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   })
 
   cmd_button.addEventListener('click', function(event) {
-    fetch('/ita/exec?cmd=' + cmd.value)
+    fetch('/api?cmd=' + cmd.value)
     .then(response => {
       if(!response.ok) throw new Error('Network response was not ok');
       return response.text();
@@ -70,7 +78,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   })
 
   config_button.addEventListener('click', function(event) {
-    fetch('/ita/exec?config=' + config.value)
+    fetch('/api?config=' + config.value)
     .then(response => {
       if(!response.ok) throw new Error('Network response was not ok');
       return response.text();
