@@ -152,9 +152,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
       .then(function(data) {
         if(data.response == 'success') {
           header = data.header;
-          max_index = parseInt(data.cols[data.cols.length - 1]['id']);
-          new_points = data.cols;
-          setTimeout(create_chart, 50);
+          data_info = document.getElementById('data-info')
+          if(data.cols.length) {
+            max_index = parseInt(data.cols[data.cols.length - 1]['id']);
+            new_points = data.cols;
+            data_info.classList.add('d-none')
+            setTimeout(create_chart, 50);
+          } else {
+            data_info.classList.remove('d-none')
+          }
         }
       })
       .catch(function(error) {

@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       })
       .then(function(data) {
         if(data.response == 'success') {
-          updateTable(data);
+          if(data.cols.length) updateTable(data);
         }
       })
       .catch(function(error) {
