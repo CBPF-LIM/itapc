@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
   var loading = document.getElementById('loading-icon');
   var max_index = 0;
   var experiment_id = document.getElementById('experiment-id').dataset.id;
-
+  var update_channel = `update-${experiment_id}`
   var followCheckbox = document.getElementById('follow-checkbox');
+  var syncCheckbox = document.getElementById('sync-checkbox')
 
   followCheckbox.addEventListener('change', function() {
     table = document.getElementById('output-table')
@@ -24,6 +25,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
       table.classList.remove('order-0')
       table.classList.add('order-1')
     }
+  })
+
+  syncCheckbox.addEventListener('change', function() {
+    setSync()
   })
 
   function updateTable(data) {
@@ -133,6 +138,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
       });
   }
 
+  function setSync() {
+    if(syncCheckbox.checked) {
+      socket.on(update_channel, function() {
+        start_spinner();
+        get_data();
+        stop_spinner();
+      });
+    } else {
+      socket.off(update_channel);
+    }
+  }
+
   socket.on('connect', function() {
       start_spinner();
       status.classList.add('on');
@@ -148,9 +165,5 @@ document.addEventListener('DOMContentLoaded', (event) => {
       console.log('Disconnected');
   });
 
-  socket.on(`update-${experiment_id}`, function() {
-    start_spinner();
-    get_data();
-    stop_spinner();
-  });
+  setSync()
 });
