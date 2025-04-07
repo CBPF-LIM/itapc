@@ -57,13 +57,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     if (chartInstance) {
       chartInstance.data = data
-      chartInstance.update();
+      chartInstance.update({
+        duration: 0,
+        lazy: false,
+      });
     } else {
       chartInstance = new Chart(ctx, {
         type: 'line',
         data: data,
         options: {
           responsive: true,
+          animation: false,
           scales: {
             y: {
               beginAtZero: false

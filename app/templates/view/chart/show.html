@@ -42,6 +42,12 @@
 
     <hr>
 
+    <div>
+      <a href="{{ url_for('view_api.download', id=experiment.id) }}", targer="_blank">
+        Download CSV
+      </a>
+    </div>
+
     <div class="row">
       <div class="col-md-5 col-12 mb-2">
         <label for="x-axis" class="form-label">X-Axis</label>
