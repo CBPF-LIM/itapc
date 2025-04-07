@@ -125,7 +125,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
       })
       .then(function(data) {
         if(data.response == 'success') {
-          console.log(data)
           updateTable(data);
         }
       })

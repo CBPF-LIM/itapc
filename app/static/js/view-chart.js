@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const ctx = document.getElementById('view-chart');
 
     var row = get_xy();
-    console.log('row:', row);
 
     removes = x_values.length - 100
     if (removes > 0) {
@@ -133,7 +132,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   async function get_data() {
     var fetch_index = (max_index || 0) + 1;
-    console.log('fetch index:', fetch_index);
     var url = `/ita/view/api/experiments/${experiment_id}/refresh/${fetch_index}`
     await fetch(url)
       .then(function(response) {
@@ -196,7 +194,6 @@ function get_xy() {
 
   socket.on(`update-${experiment_id}`, async function() {
     if (chart_started) {
-      console.log('update event');
       start_spinner();
       await get_data();
       stop_spinner();
