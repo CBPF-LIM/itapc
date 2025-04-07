@@ -5,16 +5,28 @@ document.addEventListener('DOMContentLoaded', (event) => {
   var first_connection = true;
   var loading = document.getElementById('loading-icon');
   var max_index = 0;
+  var experiment_id = document.getElementById('experiment-id').dataset.id;
 
   var followCheckbox = document.getElementById('follow-checkbox');
 
   followCheckbox.addEventListener('change', function() {
+    table = document.getElementById('output-table')
+
     if (this.checked) {
       window.scrollTo(0, document.body.scrollHeight);
+      this.parentElement.classList.remove('order-0')
+      this.parentElement.classList.add('order-1')
+      table.classList.remove('order-1')
+      table.classList.add('order-0')
+    } else {
+      this.parentElement.classList.remove('order-1')
+      this.parentElement.classList.add('order-0')
+      table.classList.remove('order-0')
+      table.classList.add('order-1')
     }
   })
 
-  function appendOutput(data) {
+  function updateTable(data) {
     var table = document.getElementById('output');
 
     var rows = data.cols;
@@ -25,7 +37,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       data_info.classList.add('has');
     }
 
-    if(header) {
+    if(max_index == 0 && header) {
       var tr = document.createElement('tr');
 
       var th = document.createElement('th');
@@ -59,10 +71,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
       }
       table.appendChild(tr);
     }
+
     max_index = rows[rows.length - 1]['id'];
+
+
+    rows = output.querySelectorAll('tr')
+    removes = rows.length - 101
+    if(removes > 0) {
+      for (var i = 0; i < removes ; i++) {
+        output.removeChild(rows[i+1]);
+      }
+    }
+
 
     var followCheckbox = document.getElementById('follow-checkbox');
     if (followCheckbox && followCheckbox.checked && (window.scrollY + window.innerHeight + 50 >= document.body.offsetHeight)) {
+      document.documentElement.style.setProperty('scroll-behavior', 'auto', 'important');
+      document.body.style.setProperty('scroll-behavior', 'auto', 'important');
       window.scrollTo(0, document.body.scrollHeight);
     }
   }
@@ -100,7 +125,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
       })
       .then(function(data) {
         if(data.response == 'success') {
-          appendOutput(data);
+          console.log(data)
+          updateTable(data);
         }
       })
       .catch(function(error) {
@@ -123,7 +149,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       console.log('Disconnected');
   });
 
-  socket.on('done', function() {
+  socket.on(`update-${experiment_id}`, function() {
     start_spinner();
     get_data();
     stop_spinner();
