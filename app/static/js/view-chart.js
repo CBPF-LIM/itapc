@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
   var x_name;
   var y_name;
   var experiment_id = document.getElementById('experiment-id').dataset.id;
+  var update_channel = `update-${experiment_id}`
+  var syncCheckbox = document.getElementById('sync-checkbox')
+
   var chartInstance = null;
 
   var socket = io.connect('http://' + document.location.hostname + ':' + location.port);
@@ -20,6 +23,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
   var x_values = []
   var y_values = []
   var new_points = []
+
+  syncCheckbox.addEventListener('change', function() {
+    setSync()
+  })
 
   function get_axis_names() {
     x_name = x_axis.value;
@@ -40,7 +47,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     x_values.push(...row[0]);
     y_values.push(...row[1]);
-
 
     const data = {
       labels: x_values,
@@ -84,6 +90,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     max_index = undefined
     await get_axis_names();
     await get_data();
+    setSync()
   }
 
   function parse_rows() {
@@ -176,6 +183,18 @@ function get_xy() {
     return [x, y];
   }
 
+  function setSync() {
+    if(syncCheckbox.checked) {
+      socket.on(update_channel, function() {
+        start_spinner();
+        get_data();
+        stop_spinner();
+      });
+    } else {
+      socket.off(update_channel);
+    }
+  }
+
   generate_chart.addEventListener('click', button_click);
 
   socket.on('connect', function() {
@@ -195,13 +214,4 @@ function get_xy() {
       status_message.classList.remove('on');
       console.log('Disconnected');
   });
-
-  socket.on(`update-${experiment_id}`, async function() {
-    if (chart_started) {
-      start_spinner();
-      await get_data();
-      stop_spinner();
-    }
-  });
-
 });
