@@ -2,13 +2,9 @@ import os
 import json
 from flask import Blueprint, request, jsonify, render_template, redirect, current_app, url_for
 from ita.models import Experiment, Device, Data
+from flasktools import *
 
-BLUEPRINT = 'view_chart'
-TEMPLATE_BASE = 'view/chart'
-bp = Blueprint(BLUEPRINT, __name__)
-
-def render(template_name, *args, **kwargs):
-    return render_template(f'{TEMPLATE_BASE}/{template_name}.html', *args, **kwargs)
+bp = auto_blueprint()
 
 @bp.route('/')
 def index():

@@ -1,12 +1,8 @@
 import os
 from flask import Blueprint, render_template, redirect, current_app, url_for, redirect
+from flasktools import *
 
-BLUEPRINT = 'view_logs'
-TEMPLATE_BASE = 'view/logs'
-bp = Blueprint(BLUEPRINT, __name__)
-
-def render(template_name, *args, **kwargs):
-    return render_template(f'{TEMPLATE_BASE}/{template_name}.html', *args, **kwargs)
+bp = auto_blueprint()
 
 @bp.route('/', methods=['GET'])
 def index():
@@ -26,4 +22,4 @@ def destroy():
 
     print('Error log destroyed')
 
-    return redirect(url_for('view_logs.index'))
+    return redirect(action_for('.index'))

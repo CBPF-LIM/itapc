@@ -5,4 +5,4 @@ bp = auto_blueprint()
 
 @bp.route('/', methods=['GET'])
 def index():
-    return redirect(url_for('app_routes_view_table.index'))
+    return redirect(action_for('.index'))

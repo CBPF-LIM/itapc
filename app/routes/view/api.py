@@ -4,9 +4,9 @@ import json
 import io
 from flask import Blueprint, jsonify, current_app, Response
 from ita.models import Experiment, Data
+from flasktools import *
 
-BLUEPRINT = 'view_api'
-bp = Blueprint(BLUEPRINT, __name__)
+bp = auto_blueprint()
 
 @bp.route('/experiments/<int:id>/refresh/<int:index>')
 def refresh(id, index):

@@ -1,16 +1,5 @@
-{% extends 'base.html' %}
-
 {% block css %}
   <link rel="stylesheet" href="/static/css/view.css">
-{% endblock %}
-
-{% block js %}
-  <script src="/static/vendors/socketio/socket.io.min.js"></script>
-  <script src="/static/vendors/chartjs/chart.umd.js"></script>
-  <script src="/static/js/view-chart.js"></script>
-{% endblock %}
-
-{% block content %}
   <style>
     .chart-container {
       position: relative;
@@ -22,69 +11,74 @@
       height: 100% !important;
     }
   </style>
-
-  <section class="view">
-    <span class="d-none" id="experiment-id" data-id="{{ experiment.id }}"></span>
-    <h1>Data Chart</h1>
-
-    <div class="alert alert-danger" role="alert" id="status-message">
-      Server appears to be down. Waiting ...
-    </div>
-
-    <ul class="status">
-      <li>
-        <i class="fs-3 bi-router" id="connection-status"></i>
-      </li>
-      <li>
-        <i class="fs-3 bi-cloud-download-fill" id="loading-icon"></i>
-        <div class="d-inline-block form-check">
-          <input class="form-check-input" type="checkbox" id="sync-checkbox" checked>
-          <label class="form-check-label" for="sync-checkbox">
-            Sync
-          </label>
-        </div>
-      </li>
-    </ul>
-
-    <hr>
-
-    <div>
-      <a href="{{ url_for('view_api.download', id=experiment.id) }}", targer="_blank">
-        Download CSV
-      </a>
-    </div>
-
-    <p id="data-info" class='d-none'>No data available yet. Please wait...</p>
-
-    <div class="row">
-      <div class="col-md-5 col-12 mb-2">
-        <label for="x-axis" class="form-label">X-Axis</label>
-        <select class="form-select" name="x-axis" id="x-axis">
-          <!-- <option value="">X-Axis</option> -->
-          {% for col in experiment.header %}
-            <option value="{{ col }}">{{ col }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-md-5 col-12 mb-2">
-        <label for="y-axis" class="form-label">Y-Axis</label>
-        <select class="form-select" name="y-axis" id="y-axis">
-          <!-- <option value="">Y-Axis</option> -->
-          {% for col in experiment.header %}
-            <option value="{{ col }}">{{ col }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="col-md-2 col-12 mb-2">
-        <button id="generate-chart" class="btn btn-outline-primary">View</button>
-      </div>
-    </div>
-
-    <div class="chart-container">
-      <canvas id="view-chart"></canvas>
-    </div>
-  </section>
-
 {% endblock %}
+
+{% block js %}
+  <script src="/static/vendors/socketio/socket.io.min.js"></script>
+  <script src="/static/vendors/chartjs/chart.umd.js"></script>
+  <script src="/static/js/view-chart.js"></script>
+{% endblock %}
+
+<section class="view">
+  <span class="d-none" id="experiment-id" data-id="{{ experiment.id }}"></span>
+  <h1>Data Chart</h1>
+
+  <div class="alert alert-danger" role="alert" id="status-message">
+    Server appears to be down. Waiting ...
+  </div>
+
+  <ul class="status">
+    <li>
+      <i class="fs-3 bi-router" id="connection-status"></i>
+    </li>
+    <li>
+      <i class="fs-3 bi-cloud-download-fill" id="loading-icon"></i>
+      <div class="d-inline-block form-check">
+        <input class="form-check-input" type="checkbox" id="sync-checkbox" checked>
+        <label class="form-check-label" for="sync-checkbox">
+          Sync
+        </label>
+      </div>
+    </li>
+  </ul>
+
+  <hr>
+
+  <div>
+    <a href="{{ url_for('app_routes_view_api.download', id=experiment.id) }}", targer="_blank">
+      Download CSV
+    </a>
+  </div>
+
+  <p id="data-info" class='d-none'>No data available yet. Please wait...</p>
+
+  <div class="row">
+    <div class="col-md-5 col-12 mb-2">
+      <label for="x-axis" class="form-label">X-Axis</label>
+      <select class="form-select" name="x-axis" id="x-axis">
+        <!-- <option value="">X-Axis</option> -->
+        {% for col in experiment.header %}
+          <option value="{{ col }}">{{ col }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-5 col-12 mb-2">
+      <label for="y-axis" class="form-label">Y-Axis</label>
+      <select class="form-select" name="y-axis" id="y-axis">
+        <!-- <option value="">Y-Axis</option> -->
+        {% for col in experiment.header %}
+          <option value="{{ col }}">{{ col }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-2 col-12 mb-2">
+      <button id="generate-chart" class="btn btn-outline-primary">View</button>
+    </div>
+  </div>
+
+  <div class="chart-container">
+    <canvas id="view-chart"></canvas>
+  </div>
+</section>

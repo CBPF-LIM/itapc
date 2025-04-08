@@ -3,21 +3,24 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>
-      Real-Time Data Viewer
-    </title>
-    {% block css %}{% endblock %}
+    {% block meta %}{% endblock %}
+
+    <title>Real-Time Data Viewer</title>
+    {% block head %}{% endblock %}
+
     <link rel="stylesheet" href="/static/vendors/bootstrap-5.2.3-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/vendors/bootstrap-icons-1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/static/css/base.css">
+    {% block css %}{% endblock %}
 
     <script src="/static/vendors/bootstrap-5.2.3-dist/js/bootstrap.bundle.min.js"></script>
     {% block js %}{% endblock %}
   </head>
+
   <body>
-    {% include 'nav.html' %}
+    {% include 'shared/nav.html' %}
     <div class="container">
-      {% block content %}{% endblock %}
+      {% include body %}
     </div>
   </body>
 </html>
