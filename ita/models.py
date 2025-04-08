@@ -45,7 +45,18 @@ class BaseModel(Model):
             if not created:
                 instance.updated_at = datetime.now()
 
+class AppConfig(BaseModel):
+    key = CharField(unique=True)
+    value = TextField(null=True)
+    updated_at = None
+    created_at = None
+
 class Setting(BaseModel):
+    name = CharField(default="")
+    _config = TextField(column_name='config', null=True)
+    config = json_property('_config')
+
+class SystemConfig(BaseModel):
     name = CharField(default="")
     _config = TextField(column_name='config', null=True)
     config = json_property('_config')
@@ -75,4 +86,12 @@ class Data(BaseModel):
     cols = json_property('_cols')
 
 db.connect()
-db.create_tables([Data, Experiment, Device, Setting], safe=True)
+db.create_tables([Data, Experiment, Device, Setting, SystemConfig, AppConfig], safe=True)
+
+if not AppConfig.select().exists():
+    # create default settings
+    #
+    # AppConfig.create(key="...", value="...")
+    # AppConfig.create(key="...", value="...")
+    # AppConfig.create(key="...", value="...")
+    pass
