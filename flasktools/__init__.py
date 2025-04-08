@@ -17,7 +17,7 @@ def auto_blueprint():
     caller__name__ = caller_frame.f_globals['__name__']
 
     # Replace dots to avoid conflicts
-    blueprint_name = caller__name__.replace('.', '_')
+    blueprint_name = caller__name__.replace('.', '/')
 
     return Blueprint(blueprint_name, caller__name__)
 
