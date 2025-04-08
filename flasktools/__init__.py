@@ -21,23 +21,27 @@ def auto_blueprint():
 
     return Blueprint(blueprint_name, caller__name__)
 
-def action_for(relative_path, *args, **kwargs):
-    if not relative_path.startswith('.'):
-        return url_for(relative_path, *args, **kwargs)
+# Wrapper for Flask's url_for, but with short "dot" notation.
+# drop to normal url_for if the endpoint is not in dot notation
+def action_for(endpoint, external=False, *args, **kwargs):
+    return url_for(_resolve_endpoint(endpoint), _external=external, *args, **kwargs)
 
-    # Get current endpoint like 'app_routes_view_table.index'
-    current_endpoint = request.endpoint
+# Relative alternative of action_for
+def action_path(endpoint, *args, **kwargs):
+    return url_for(_resolve_endpoint(endpoint), *args, **kwargs)
 
-    # Strip to get the "namespace" prefix: 'app_routes_view_table'
-    base = current_endpoint.rsplit('.', 1)[0]
-
-    # Build full endpoint name: 'app_routes_view_table.create'
-    full_endpoint = f"{base}.{relative_path[1:]}"
-
-    return url_for(full_endpoint, *args, **kwargs)
+# Absolute alternative of action_for
+def action_url(endpoint, *args, **kwargs):
+    return url_for(_resolve_endpoint(endpoint), _external=True, *args, **kwargs)
 
 
 # Private methods
+
+def _resolve_endpoint(dot_path):
+    if not dot_path.startswith('.'):
+        return dot_path
+    base = request.endpoint.rsplit('.', 1)[0]
+    return f"{base}.{dot_path[1:]}"
 
 def _layout(kwargs):
   name = kwargs.pop('layout', 'application')
