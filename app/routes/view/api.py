@@ -19,7 +19,7 @@ def refresh(id, index):
 
     cols = [ {"id": d.id, "cols": d.cols} for d in rows]
     data = {'response': 'success', 'type': 'GET', 'cols': cols}
-    data['header'] = json.loads(experiment.header)
+    data['header'] = experiment.header
 
     return jsonify(data)
 
@@ -31,7 +31,7 @@ def download(id):
 
     # Prepare data
     data = experiment.data.select()
-    header = json.loads(experiment.header)
+    header = experiment.header
     cols = [ {"id": d.id, "cols": d.cols} for d in data ]
 
     # Create CSV in-memory

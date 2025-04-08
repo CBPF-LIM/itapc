@@ -14,6 +14,5 @@ def index():
 @bp.route('/<int:id>')
 def show(id):
     experiment = Experiment.get_or_none(Experiment.id == id)
-    experiment.header = json.loads(experiment.header) if experiment else []
 
     return render('show', experiment=experiment)
