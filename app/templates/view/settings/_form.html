@@ -1,0 +1,50 @@
+{% if setting.id %}
+  <h1>Edit<h1>
+  <h2>Setting {{ setting.id }}</h2>
+{% else %}
+  <h1>New Setting</h1>
+{% endif %}
+<hr>
+
+<form action="{{ action }}" method="post">
+  <div id="pairs-container">
+    {% for key, value in setting.config.items() %}
+      <div class="pairs-container-item input-group mb-3">
+        <span class="input-group-text">Key</span>
+        <input name="keys[]" type="text" value="{{ key }}" class="form-control" placeholder="Key">
+        <span class="input-group-text">Value</span>
+        <input name="values[]" type="text" value="{{ value }}" class="form-control" placeholder="Valid JSON value">
+        <button class="btn btn-outline-danger" type="button" onclick="removePair(this)">Remove</button>
+      </div>
+    {% endfor %}
+  </div>
+
+  <button type="button" class='btn btn-primary' onclick="addPair()">
+    Add Pair
+  </button>
+  <hr>
+  <button type="submit" class='btn btn-primary'>Save</button>
+</form>
+
+<script>
+  function addPair() {
+    const div = document.createElement('div');
+    div.classList.add('pair');
+    div.innerHTML = `
+      <div class="pairs-container-item input-group mb-3">
+        <span class="input-group-text">Key</span>
+        <input name="keys[]" type="text" class="form-control" placeholder="Key">
+        <span class="input-group-text">Value</span>
+        <input name="values[]" type="text" class="form-control" placeholder="Valid JSON value">
+        <button class="btn btn-outline-danger" type="button" onclick="removePair(this)">Remove</button>
+      </div>
+    `;
+    document.getElementById('pairs-container').appendChild(div);
+  }
+
+  function removePair(button) {
+    button.parentElement.remove();
+  }
+
+  addPair()
+</script>
