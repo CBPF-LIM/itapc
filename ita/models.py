@@ -1,16 +1,17 @@
 import json
 from datetime import datetime
-
 from peewee import *
+from playhouse.signals import Model, pre_save
+
 from playhouse.sqlite_ext import JSONField
 
 # SQLite database
 db = SqliteDatabase("ita.db")
 
 # Define a custom JSON property for the model
-def json_property(attr_name, default={}):
+def json_property(field_name, default={}):
     def getter(self):
-        raw = getattr(self, attr_name)
+        raw = getattr(self, field_name)
         if raw is None:
             return default() if callable(default) else default
         try:
@@ -19,14 +20,15 @@ def json_property(attr_name, default={}):
             return default() if callable(default) else default
 
     def setter(self, value):
-        setattr(self, attr_name, json.dumps(value))
+        if isinstance(value, dict):
+            raw = json.dumps(value)
+        elif isinstance(value, str):
+            raw = value
+        else:
+            raise ValueError("Must be dict or JSON string")
+        setattr(self, field_name, raw)
 
     return property(getter, setter)
-
-def add_json(column):
-    field = TextField(column_name=column, null=True)
-    prop = json_property(f"_{column}")
-    return prop, field
 
 class BaseModel(Model):
     id = PrimaryKeyField()
@@ -37,14 +39,15 @@ class BaseModel(Model):
         database = db
         legacy_table_names = False
 
-    def pre_save(self, created):
+    @pre_save()
+    def update_timestamp(sender, instance, created):
         if not created:
-            self.updated_at = datetime.now()
-        return super().pre_save(created)
+            instance.updated_at = datetime.now()
 
 class Experiment(BaseModel):
     name = CharField()
-    header, _header = add_json("header")
+    _header = TextField(column_name='header', null=True)
+    header = json_property('_header')
 
     @property
     def data(self):
@@ -60,7 +63,12 @@ class Data(BaseModel):
 
     t0 = BigIntegerField()
     t1 = BigIntegerField()
-    cols, _cols = add_json("cols")
+    _cols = TextField(column_name='cols', null=True)
+    cols = json_property('_cols')
+
+class Setting(BaseModel):
+    _config = TextField(column_name='config', null=True)
+    config = json_property('_config')
 
 db.connect()
-db.create_tables([Data, Experiment, Device], safe=True)
+db.create_tables([Data, Experiment, Device, Setting], safe=True)
