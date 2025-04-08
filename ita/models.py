@@ -41,8 +41,9 @@ class BaseModel(Model):
 
     @pre_save()
     def update_timestamp(sender, instance, created):
-        if not created:
-            instance.updated_at = datetime.now()
+        if hasattr(instance, 'updated_at'):
+            if not created:
+                instance.updated_at = datetime.now()
 
 class Experiment(BaseModel):
     name = CharField()
@@ -60,6 +61,7 @@ class Device(BaseModel):
 class Data(BaseModel):
     experiment = ForeignKeyField(Experiment, backref='data')
     device = ForeignKeyField(Device, backref='data')
+    updated_at = None
 
     t0 = BigIntegerField()
     t1 = BigIntegerField()
