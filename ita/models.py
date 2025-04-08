@@ -45,7 +45,13 @@ class BaseModel(Model):
             if not created:
                 instance.updated_at = datetime.now()
 
+class Setting(BaseModel):
+    name = CharField(default="")
+    _config = TextField(column_name='config', null=True)
+    config = json_property('_config')
+
 class Experiment(BaseModel):
+    setting = ForeignKeyField(Setting, backref='experiments')
     name = CharField()
     _header = TextField(column_name='header', null=True)
     header = json_property('_header')
@@ -67,10 +73,6 @@ class Data(BaseModel):
     t1 = BigIntegerField()
     _cols = TextField(column_name='cols', null=True)
     cols = json_property('_cols')
-
-class Setting(BaseModel):
-    _config = TextField(column_name='config', null=True)
-    config = json_property('_config')
 
 db.connect()
 db.create_tables([Data, Experiment, Device, Setting], safe=True)
