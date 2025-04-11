@@ -52,9 +52,3 @@ def _page(name):
   caller_file = frame.filename
   rel_path = caller_file.split('/routes/')[-1].strip('.py')
   return f'{rel_path}/{name}.html'
-
-
-# TODO
-# from flasktools import render (in every route)
-# remove: TEMPLATE_BASE (not needed)
-# convert all html to remove %content block%
