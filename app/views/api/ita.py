@@ -1,11 +1,9 @@
 import os
 import json
-import time
 from tools import filelines
 from tools.shortcuts import b
 from datetime import datetime
-import ita.models as models
-from flask import jsonify
+import app.models as models
 
 settings = {}
 

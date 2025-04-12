@@ -1,8 +1,6 @@
 from flask import Flask
 import jinja_partials
 from flask_socketio import SocketIO
-
-from app.configs import base
 from app.routes import draw_routes_for
 from flasktools import action_for
 import os

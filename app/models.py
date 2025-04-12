@@ -3,7 +3,7 @@ from datetime import datetime
 from peewee import *
 from playhouse.signals import Model, pre_save
 
-from playhouse.sqlite_ext import JSONField
+# from playhouse.sqlite_ext import JSONField
 
 # SQLite database
 db = SqliteDatabase("ita.db")

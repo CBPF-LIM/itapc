@@ -1,4 +1,4 @@
-from flask import Blueprint, request, current_app
+from flask import request
 from app import response
 import ita
 from flasktools import *

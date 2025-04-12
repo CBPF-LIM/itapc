@@ -1,6 +1,6 @@
-from flask import Blueprint, redirect, render_template, url_for, request, flash
+from flask import redirect, request, flash
 from flasktools import *
-from ita.models import Setting
+from app.models import Setting
 import json
 
 bp = auto_blueprint()

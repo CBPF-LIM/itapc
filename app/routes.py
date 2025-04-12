@@ -1,11 +1,11 @@
-from app.routes.view.root import bp as view_root_blueprint
-from app.routes.view.api import bp as view_api_blueprint
-from app.routes.view.logs import bp as view_logs_blueprint
-from app.routes.view.tools import bp as view_tools_blueprint
-from app.routes.view.settings import bp as view_settings_blueprint
-from app.routes.view.experiments import bp as view_experiments_blueprint
+from app.views.view.root import bp as view_root_blueprint
+from app.views.view.api import bp as view_api_blueprint
+from app.views.view.logs import bp as view_logs_blueprint
+from app.views.view.tools import bp as view_tools_blueprint
+from app.views.view.settings import bp as view_settings_blueprint
+from app.views.view.experiments import bp as view_experiments_blueprint
 
-from app.routes.api import bp as api_blueprint
+from app.views.api import bp as api_blueprint
 
 def draw_routes_for(app):
     app.register_blueprint(view_root_blueprint, url_prefix='/')

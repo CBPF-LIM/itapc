@@ -50,5 +50,5 @@ def _layout(kwargs):
 def _page(name):
   frame = inspect.stack()[2]  # page is called from render[1]. Render is called from the route[2]
   caller_file = frame.filename
-  rel_path = caller_file.split('/routes/')[-1].strip('.py')
+  rel_path = caller_file.split('/views/')[-1].strip('.py')
   return f'{rel_path}/{name}.html'
