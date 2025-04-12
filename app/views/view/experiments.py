@@ -105,7 +105,7 @@ def update(id):
     experiment.save()
     flash('Experiment updated successfully.', 'success')
 
-    return redirect(url_for('.show', id=id))
+    return redirect(url_for('.index'))
 
 
 # destroy route
@@ -121,3 +121,27 @@ def delete(id):
         flash('Experiment not found.', 'error')
 
     return redirect(url_for('.index'))
+
+
+# destroy data route
+@bp.route('/<int:id>/data_delete_all', methods=['POST'])
+def data_delete_all(id):
+    experiment = Experiment.get_or_none(Experiment.id == id)
+    if experiment:
+        Data.delete().where(Data.experiment == experiment).execute()
+        flash("Experiment's data deleted successfully.", 'success')
+    else:
+        flash('Experiment not found.', 'error')
+
+    return redirect(url_for('.edit', id=id))
+
+
+@bp.route('/<int:id>/tools', methods=['GET'])
+def tools(id):
+    experiment = Experiment.get_or_none(Experiment.id == id)
+
+    if experiment:
+        return render('tools', experiment=experiment)
+    else:
+        flash('Experiment not found.', 'error')
+        return redirect(url_for('.index'))

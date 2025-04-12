@@ -1,5 +1,10 @@
-<h1>Table Viewer</h1>
+<h1>Experiments</h1>
 <hr>
+
+<div class="d-flex gap-2">
+    <a href="{{ action_for('.index') }}" class="btn btn-primary">Refresh</a>
+    <a href="{{ action_for('.new') }}" class="btn btn-primary">New</a>
+</div>
 
 <table class="table table-responsive table-striped">
     <thead>
@@ -19,6 +24,9 @@
                 </a>
             </td>
             <td class='d-flex gap-2'>
+                <a href="{{ action_for('.tools', id=experiment.id) }}" class="btn btn-outline-primary">
+                    <i class="bi-send"></i>
+                </a>
                 <a href="{{ action_for('.show_table', id=experiment.id) }}" class="btn btn-outline-primary">
                     <i class="bi-table"></i>
                 </a>

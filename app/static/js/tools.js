@@ -7,12 +7,6 @@
  */
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  // 1. intercept form id send post
-  // 2. get cols field
-  // 3. create a json from cols as {cols: processed_cols}
-  // 4. processed cols is col string split by comma
-  // 5. send post with json data
-
   var post_button = document.getElementById('post-button');
   var post_output = document.getElementById('post-output');
   var cols = document.getElementById('cols');
@@ -24,6 +18,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
   var config_button = document.getElementById('config-button');
   var config_output = document.getElementById('config-output');
   var config = document.getElementById('config');
+
+  var experiment_id = document.getElementById('experiment-id').dataset.id;
 
   function data_success(target, data) {
     target.innerHTML = data;
@@ -47,7 +43,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   post_button.addEventListener('click', function(event) {
     var processed_cols = cols.value.split(',');
-    var json_data = {cols: processed_cols};
+    var json_data = {experiment: experiment_id, device: '000088FA7412CFA4', t0: '1', t1: '2', cols: processed_cols};
     fetch('/api', {
       method: 'POST',
       headers: {
@@ -64,7 +60,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   })
 
   cmd_button.addEventListener('click', function(event) {
-    fetch('/api?cmd=' + cmd.value)
+    fetch(`/api?exp=${experiment_id}&cmd=${cmd.value}`)
     .then(response => {
       if(!response.ok) throw new Error('Network response was not ok');
       return response.text();
@@ -78,7 +74,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   })
 
   config_button.addEventListener('click', function(event) {
-    fetch('/api?config=' + config.value)
+    fetch(`/api?exp=${experiment_id}&config=${config.value}`)
     .then(response => {
       if(!response.ok) throw new Error('Network response was not ok');
       return response.text();

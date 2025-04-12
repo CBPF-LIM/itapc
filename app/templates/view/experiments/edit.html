@@ -1,1 +1,25 @@
 {{ render_partial('view/experiments/_form.html', experiment=experiment, settings=settings, action=action_for('.update', id=experiment.id))}}
+
+<hr>
+
+<details style="background-color: #f8d7da; border-radius: 5px; padding: 10px; border: 1px solid #f5c6cb; cursor: pointer; width: 100%; margin-top: 20px; margin-bottom: 20px;">
+  <summary style="font-size: 1.5em; font-weight: bold; color: #dc3545;">Danger zone</summary>
+  <hr>
+
+  <form method="POST" action="{{ action_for('.data_delete_all', id=experiment.id) }}" class="d-inline" onsubmit="return confirm('Delete all data?');">
+    <button type="submit" class="btn btn-danger">Delete all data</button>
+  </form>
+
+  <p class='mt-2'>
+    This will delete all data associated with this experiment. This action cannot be undone.
+  </p>
+
+
+  <form method="POST" action="{{ action_for('.delete', id=experiment.id) }}" class="d-inline" onsubmit="return confirm('Delete experiment and its data?');">
+    <button type="submit" class="btn btn-danger">Delete all data and experiment</button>
+  </form>
+
+  <p class='mt-2'>
+    This will delete the experiment and all data associated with it. This action cannot be undone.
+  </p>
+</details>

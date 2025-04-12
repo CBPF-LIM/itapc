@@ -5,14 +5,15 @@ from app.models import Experiment, Device, Data
 from app.data_processor import success, error
 
 def save_data(data):
-  experiment = Experiment.get_or_none(Experiment.name == data["experiment"])
+  experiment_id = data.get("exp")
+  experiment = Experiment.get_or_none(Experiment.id == experiment_id)
 
   if not experiment:
     number_of_cols = len(data["cols"])
     header = [f"Col {i+1}" for i in range(number_of_cols)]
 
     experiment = Experiment.create(
-        name=data["experiment"],
+        name='Untitled Experiment',
         header=json.dumps(header)
     )
 
@@ -42,15 +43,26 @@ def save_data(data):
   return success(response, 'POST')
 
 def processGet(query):
+    experiment_id = query.get('exp')
+    experiment = Experiment.get_or_none(Experiment.id == experiment_id)
+
+    if not experiment:
+        return error('Experiment not found')
+
     if 'cmd' in query:
         cmd = query['cmd']
-        if cmd == 'last-index':
-            return success(last_index())
-        elif cmd == 'configs':
-            return success(configs())
+
+        if cmd == 'configs':
+            return success(experiment.setting.config)
 
     elif 'config' in query:
-        return success(config(query['config']))
+        key = query['config']
+        value = experiment.setting.config.get(key)
+
+        if value:
+            return success(value)
+        else:
+            return error('Config not found')
 
     if query == {}:
         return success('Nothing to do')
