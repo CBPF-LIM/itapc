@@ -25,6 +25,7 @@ def new():
 def create():
     setting = Setting()
 
+    name = request.form.get('name', 'Untitled')
     keys = request.form.getlist('keys[]')
     values = request.form.getlist('values[]')
 
@@ -32,6 +33,7 @@ def create():
     if new_config is None:
         return redirect(action_for('.edit', id=id))
 
+    setting.name = name
     setting.config = new_config
     setting.save()
 
@@ -41,6 +43,7 @@ def create():
 def update(id):
     setting = Setting.select().where(Setting.id == id).first()
 
+    name = request.form.get('name', 'Untitled')
     keys = request.form.getlist('keys[]')
     values = request.form.getlist('values[]')
 
@@ -48,6 +51,7 @@ def update(id):
     if new_config is None:
         return redirect(action_for('.edit', id=id))
 
+    setting.name = name
     setting.config = new_config
     setting.save()
 

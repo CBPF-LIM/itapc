@@ -7,7 +7,13 @@
 <hr>
 
 <form action="{{ action }}" method="post">
+  <div class="input-group mb-3">
+    <span class="input-group-text">Name</span>
+    <input name="name" type="text" value="{{ setting.name }}" class="form-control" placeholder="Name">
+  </div>
+
   <div id="pairs-container">
+    <h2>Configs</h2>
     {% for key, value in setting.config.items() %}
       <div class="pairs-container-item input-group mb-3">
         <span class="input-group-text">Key</span>
