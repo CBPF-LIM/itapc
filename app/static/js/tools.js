@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
   post_button.addEventListener('click', function(event) {
     var processed_cols = cols.value.split(',');
-    var json_data = {experiment: experiment_id, device: '000088FA7412CFA4', t0: '1', t1: '2', cols: processed_cols};
+    var json_data = {exp: experiment_id, device: '000088FA7412CFA4', t0: '1', t1: '2', cols: processed_cols};
     fetch('/api', {
       method: 'POST',
       headers: {
