@@ -1,0 +1,13 @@
+{{ render_partial('view/devices/_form.html', device=device, action=action_for('.update', id=device.id)) }}
+
+<details style="background-color: #f8d7da; border-radius: 5px; padding: 10px; border: 1px solid #f5c6cb; cursor: pointer; width: 100%; margin-top: 20px; margin-bottom: 20px;">
+  <summary style="font-size: 1.5em; font-weight: bold; color: #dc3545;">Danger zone</summary>
+  <hr>
+
+  <form method="POST" action="{{ action_for('.delete', id=device.id) }}" class="d-inline" onsubmit="return confirm('Delete device?');">
+    <button type="submit" class="btn btn-danger">Delete</button>
+  </form>
+
+  <p class='mt-2'>
+    This will delete the device. This action cannot be undone.
+  </p>

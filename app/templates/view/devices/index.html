@@ -1,0 +1,34 @@
+<h1>Devices</h1>
+<hr>
+
+<div class="d-flex gap-2">
+    <a href="{{ action_for('.index') }}" class="btn btn-primary">Refresh</a>
+    <a href="{{ action_for('.new') }}" class="btn btn-primary">New</a>
+</div>
+
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Hash</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for device in devices %}
+        <tr>
+            <td>{{ device.id }}</td>
+            <td>
+                <a href="{{ action_for('.edit', id=device.id) }}">
+                    {{ device.name }}
+                </a>
+            </td>
+            <td>
+                <a href="{{ action_for('.edit', id=device.id) }}">
+                    {{ device.hash }}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
