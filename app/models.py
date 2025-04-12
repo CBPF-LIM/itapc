@@ -39,6 +39,19 @@ class BaseModel(Model):
         database = db
         legacy_table_names = False
 
+    @classmethod
+    def all(cls):
+        return cls.select()
+
+    @classmethod
+    def find_by(cls, **kwargs):
+        return cls.get_or_none(**kwargs)
+
+    @classmethod
+    def find(cls, pk):
+        pk_field = cls._meta.primary_key
+        return cls.get_or_none(pk_field == pk)
+
     @pre_save()
     def update_timestamp(sender, instance, created):
         if hasattr(instance, 'updated_at'):
