@@ -2,6 +2,7 @@ import json
 from flask import redirect, flash
 from app.models import Experiment, Data, Setting
 from tools.flasktools import *
+from tools.shortcuts import b
 
 bp = auto_blueprint()
 
@@ -16,6 +17,7 @@ def index():
 @bp.route('/<int:id>')
 def show(id):
     experiment = Experiment.get_or_none(Experiment.id == id)
+    experiment.header_cols = json.loads(experiment.header) if experiment.header else []
 
     return render('show', experiment=experiment)
 
@@ -40,9 +42,9 @@ def show_chart(id):
 @bp.route('/new')
 def new():
     experiment = Experiment()
-    experiment.header = {}
+    header_cols = []
     settings = Setting.select()
-    return render('new', experiment=experiment, settings=settings)
+    return render('new', experiment=experiment, settings=settings, header_cols=header_cols)
 
 
 # create route
@@ -50,7 +52,10 @@ def new():
 def create():
     experiment = Experiment()
     experiment.name = request.form.get('name', '')
-    experiment.header = json.loads(request.form.get('header', '{}'))
+
+    cols = request.form.getlist('cols[]')
+    cols = [item for item in cols if item not in (None, '')]
+    experiment.header = json.dumps(cols)
 
     setting_id = request.form.get('setting')
     experiment.setting = Setting.get_or_none(Setting.id == setting_id)
@@ -78,7 +83,9 @@ def edit(id):
         flash('Experiment not found.', 'error')
         return redirect(url_for('.index'))
 
-    return render('edit', experiment=experiment, settings=settings)
+    header_cols = json.loads(experiment.header) if experiment.header else []
+
+    return render('edit', experiment=experiment, settings=settings, header_cols=header_cols)
 
 
 # update route
@@ -90,7 +97,10 @@ def update(id):
         return redirect(url_for('.index'))
 
     experiment.name = request.form.get('name', '')
-    experiment.header = json.loads(request.form.get('header', '{}'))
+
+    cols = request.form.getlist('cols[]')
+    cols = [item for item in cols if item not in (None, '')]
+    experiment.header = json.dumps(cols)
 
     setting_id = request.form.get('setting')
     experiment.setting = Setting.get_or_none(Setting.id == setting_id)

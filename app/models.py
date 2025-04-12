@@ -64,8 +64,7 @@ class SystemConfig(BaseModel):
 class Experiment(BaseModel):
     setting = ForeignKeyField(Setting, backref='experiments', null=True)
     name = CharField()
-    _header = TextField(column_name='header', null=True)
-    header = json_property('_header')
+    header = TextField(column_name='header', null=True)
 
     @property
     def data(self):

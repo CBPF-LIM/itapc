@@ -12,11 +12,6 @@
   </div>
 
   <div class="input-group mb-3">
-    <span class="input-group-text">Headers</span>
-    <input name="header_string" type="text" value="{{ experiment.header_string }}" class="form-control" placeholder="Separated with comma">
-  </div>
-
-  <div class="input-group mb-3">
     <span class="input-group-text">Setting</span>
     <select name="setting" class="form-select">
       <option value="" {% if not experiment.setting %}selected{% endif %}>Select setting</option>
@@ -28,6 +23,49 @@
     </select>
   </div>
 
+  <h2>Header</h2>
+
+  <div class='row'>
+    <div class='col'>
+      <div id="pairs-container">
+        {% for col in header_cols %}
+          <div class="pairs-container-item input-group mb-3">
+            <span class="input-group-text">Col</span>
+            <input name="cols[]" type="text" value="{{ col }}" class="form-control" placeholder="Key">
+            <button class="btn btn-outline-danger" type="button" onclick="removePair(this)">Remove</button>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class='col d-flex align-items-end'>
+      <button type="button" class='btn btn-primary mb-3' onclick="addPair()">
+        Add
+      </button>
+    </div>
+  </div>
+
+
 
   <button type="submit" class='btn btn-primary'>Save</button>
 </form>
+
+<script>
+  function addPair() {
+    const div = document.createElement('div');
+    div.classList.add('pair');
+    div.innerHTML = `
+      <div class="pairs-container-item input-group mb-3">
+        <span class="input-group-text">Col</span>
+        <input name="cols[]" type="text" value="{{ col }}" class="form-control" placeholder="Key" size=1>
+        <button class="btn btn-outline-danger" type="button" onclick="removePair(this)">Remove</button>
+      </div>
+    `;
+    document.getElementById('pairs-container').appendChild(div);
+  }
+
+  function removePair(button) {
+    button.parentElement.remove();
+  }
+
+  addPair()
+</script>
