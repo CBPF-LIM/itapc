@@ -51,7 +51,7 @@ def clear_csv():
 @pytest.fixture
 def client():
     # this is the copy of app.main() with some adjustments
-    app = create_app(ita.processPost, ita.processGet)
+    app = create_app()
     process_args()
 
     settings = {

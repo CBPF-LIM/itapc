@@ -2,6 +2,22 @@ import time
 from tools.shortcuts import b
 from flask import jsonify
 
+def success(data, type='GET'):
+    data = {
+        'response': 'success',
+        'type': type,
+        'data': data
+    }
+    return data
+
+def error(message=None, type='GET'):
+    data = {
+        'response': 'error',
+        'type': type,
+        'message': message or 'Something went wrong'
+    }
+    return data
+
 def log_for(payload, method):
     now = time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -25,7 +41,7 @@ def process_post(payload):
 
     return jsonify({'response': 'success'}), 200
 
-def process(data):
+def response(data):
     if data['type'] == 'GET':
         return process_get(data)
 
