@@ -9,14 +9,14 @@ bp = auto_blueprint()
 # index route
 @bp.route('/')
 def index():
-    experiments = Experiment.select()
+    experiments = Experiment.all()
     return render('index', experiments=experiments)
 
 
 # show route
 @bp.route('/<int:id>')
 def show(id):
-    experiment = Experiment.get_or_none(Experiment.id == id)
+    experiment = Experiment.find(id)
     header_cols = json.loads(experiment.header) if experiment.header else []
 
     return render('show', experiment=experiment, header_cols=header_cols)
@@ -25,7 +25,7 @@ def show(id):
 # show_table route
 @bp.route('/table/<int:id>')
 def show_table(id):
-    experiment = Experiment.get_or_none(Experiment.id == id)
+    experiment = Experiment.find(id)
 
     return render('show_table', experiment=experiment)
 
@@ -33,7 +33,7 @@ def show_table(id):
 # show_chart route
 @bp.route('/chart/<int:id>')
 def show_chart(id):
-    experiment = Experiment.get_or_none(Experiment.id == id)
+    experiment = Experiment.find(id)
     header_cols = json.loads(experiment.header) if experiment.header else []
 
     return render('show_chart', experiment=experiment, header_cols=header_cols)
@@ -44,7 +44,7 @@ def show_chart(id):
 def new():
     experiment = Experiment()
     header_cols = []
-    settings = Setting.select()
+    settings = Setting.all()
     return render('new', experiment=experiment, settings=settings, header_cols=header_cols)
 
 
@@ -59,7 +59,7 @@ def create():
     experiment.header = json.dumps(cols)
 
     setting_id = request.form.get('setting')
-    experiment.setting = Setting.get_or_none(Setting.id == setting_id)
+    experiment.setting = Setting.find(setting_id)
 
     if experiment.setting:
         experiment.setting_id = experiment.setting.id
@@ -77,8 +77,8 @@ def create():
 # edit route
 @bp.route('/<int:id>/edit')
 def edit(id):
-    experiment = Experiment.get_or_none(Experiment.id == id)
-    settings = Setting.select()
+    experiment = Experiment.find(id)
+    settings = Setting.all()
 
     if not experiment:
         flash('Experiment not found.', 'error')
@@ -92,7 +92,7 @@ def edit(id):
 # update route
 @bp.route('/<int:id>', methods=['POST'])
 def update(id):
-    experiment = Experiment.get_or_none(Experiment.id == id)
+    experiment = Experiment.find(id)
     if not experiment:
         flash('Experiment not found.', 'error')
         return redirect(url_for('.index'))
@@ -104,7 +104,7 @@ def update(id):
     experiment.header = json.dumps(cols)
 
     setting_id = request.form.get('setting')
-    experiment.setting = Setting.get_or_none(Setting.id == setting_id)
+    experiment.setting = Setting.find(setting_id)
 
     if experiment.setting:
         experiment.setting_id = experiment.setting.id
@@ -122,7 +122,7 @@ def update(id):
 # destroy route
 @bp.route('/<int:id>/delete', methods=['POST'])
 def delete(id):
-    experiment = Experiment.get_or_none(Experiment.id == id)
+    experiment = Experiment.find(id)
     if experiment:
         Data.delete().where(Data.experiment == experiment).execute()
         experiment.delete_instance()
@@ -137,7 +137,7 @@ def delete(id):
 # destroy data route
 @bp.route('/<int:id>/data_delete_all', methods=['POST'])
 def data_delete_all(id):
-    experiment = Experiment.get_or_none(Experiment.id == id)
+    experiment = Experiment.find(id)
     if experiment:
         Data.delete().where(Data.experiment == experiment).execute()
         flash("Experiment's data deleted successfully.", 'success')
@@ -149,7 +149,7 @@ def data_delete_all(id):
 
 @bp.route('/<int:id>/tools', methods=['GET'])
 def tools(id):
-    experiment = Experiment.get_or_none(Experiment.id == id)
+    experiment = Experiment.find(id)
 
     if experiment:
         return render('tools', experiment=experiment)
