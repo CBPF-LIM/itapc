@@ -9,13 +9,13 @@ bp = auto_blueprint()
 # index route
 @bp.route('/')
 def index():
-    devices = Device.select()
+    devices = Device.all()
     return render('index', devices=devices)
 
 # show route
 @bp.route('/<int:id>')
 def show(id):
-    device = Device.get_or_none(Device.id == id)
+    device = Device.find(id)
 
     return render('show', device=device)
 
@@ -42,7 +42,7 @@ def create():
 # edit route
 @bp.route('/<int:id>/edit')
 def edit(id):
-    device = Device.get_or_none(Device.id == id)
+    device = Device.find(id)
 
     if not device:
         flash('Device not found.', 'error')
@@ -54,7 +54,7 @@ def edit(id):
 # update route
 @bp.route('/<int:id>', methods=['POST'])
 def update(id):
-    device = Device.get_or_none(Device.id == id)
+    device = Device.find(id)
     if not device:
         flash('Device not found.', 'error')
         return redirect(url_for('.index'))
@@ -71,7 +71,7 @@ def update(id):
 # destroy route
 @bp.route('/<int:id>/delete', methods=['POST'])
 def delete(id):
-    device = Device.get_or_none(Device.id == id)
+    device = Device.find(id)
     if device:
         device.delete_instance()
 
