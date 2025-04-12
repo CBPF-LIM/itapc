@@ -31,8 +31,8 @@ def new():
 @bp.route('/', methods=['POST'])
 def create():
     device = Device()
-    device.name = request.form.get('name', '')
-    device.hash = request.form.get('hash', '')
+    device.name = params()['name']
+    device.hash = params()['hash']
     device.save()
     flash('Device created successfully.', 'success')
 
@@ -59,8 +59,8 @@ def update(id):
         flash('Device not found.', 'error')
         return redirect(url_for('.index'))
 
-    device.name = request.form.get('name', '')
-    device.hash = request.form.get('hash', '')
+    device.name = params()['name']
+    device.hash = params()['hash']
 
     device.save()
     flash('Device updated successfully.', 'success')

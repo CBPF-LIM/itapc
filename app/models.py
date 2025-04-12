@@ -39,6 +39,23 @@ class BaseModel(Model):
         database = db
         legacy_table_names = False
 
+    def set_attrs(self, attrs):
+        for k, v in attrs.items():
+            if hasattr(self, k):
+                setattr(self, k, v)
+
+    def update_fields(self, attrs):
+        self.set_attrs(attrs)
+        self.save()
+        return self
+
+    @classmethod
+    def create(cls, attrs):
+        obj = cls()
+        obj.set_attrs(attrs)
+        obj.save()
+        return obj
+
     @classmethod
     def all(cls):
         return cls.select()
