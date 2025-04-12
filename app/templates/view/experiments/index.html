@@ -1,0 +1,32 @@
+<h1>Table Viewer</h1>
+<hr>
+
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for experiment in experiments %}
+        <tr>
+            <td>{{ experiment.id }}</td>
+            <td>
+                <a href="{{ action_for('.edit', id=experiment.id) }}">
+                    {{ experiment.name }}
+                </a>
+            </td>
+            <td class='d-flex gap-2'>
+                <a href="{{ action_for('.show_table', id=experiment.id) }}" class="btn btn-outline-primary">
+                    <i class="bi-table"></i>
+                </a>
+                <a href="{{ action_for('.show_chart', id=experiment.id) }}" class="btn btn-outline-primary">
+                    <i class="bi-graph-up"></i>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
