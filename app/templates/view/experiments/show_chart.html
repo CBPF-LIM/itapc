@@ -57,7 +57,7 @@
       <label for="x-axis" class="form-label">X-Axis</label>
       <select class="form-select" name="x-axis" id="x-axis">
         <!-- <option value="">X-Axis</option> -->
-        {% for col in experiment.header %}
+        {% for col in header_cols %}
           <option value="{{ col }}">{{ col }}</option>
         {% endfor %}
       </select>
@@ -67,7 +67,7 @@
       <label for="y-axis" class="form-label">Y-Axis</label>
       <select class="form-select" name="y-axis" id="y-axis">
         <!-- <option value="">Y-Axis</option> -->
-        {% for col in experiment.header %}
+        {% for col in header_cols %}
           <option value="{{ col }}">{{ col }}</option>
         {% endfor %}
       </select>

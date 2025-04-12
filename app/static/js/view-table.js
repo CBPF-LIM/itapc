@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   var update_channel = `update-${experiment_id}`
   var followCheckbox = document.getElementById('follow-checkbox');
   var syncCheckbox = document.getElementById('sync-checkbox')
+  var table_headers = document.getElementById('table-headers').dataset.headers;
 
   followCheckbox.addEventListener('change', function() {
     table = document.getElementById('output-table')
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     var table = document.getElementById('output');
 
     var rows = data.cols;
-    var header = data.header;
+    var header = JSON.parse(table_headers);
 
     if(rows.length) {
       var data_info = document.getElementById('data-info');

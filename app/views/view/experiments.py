@@ -17,9 +17,9 @@ def index():
 @bp.route('/<int:id>')
 def show(id):
     experiment = Experiment.get_or_none(Experiment.id == id)
-    experiment.header_cols = json.loads(experiment.header) if experiment.header else []
+    header_cols = json.loads(experiment.header) if experiment.header else []
 
-    return render('show', experiment=experiment)
+    return render('show', experiment=experiment, header_cols=header_cols)
 
 
 # show_table route
@@ -34,8 +34,9 @@ def show_table(id):
 @bp.route('/chart/<int:id>')
 def show_chart(id):
     experiment = Experiment.get_or_none(Experiment.id == id)
+    header_cols = json.loads(experiment.header) if experiment.header else []
 
-    return render('show_chart', experiment=experiment)
+    return render('show_chart', experiment=experiment, header_cols=header_cols)
 
 
 # new route
