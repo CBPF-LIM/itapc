@@ -11,7 +11,6 @@ from tools import filelines
 import time
 from datetime import datetime
 
-from app import config_parser
 from app.main import process_args
 
 with open('app_test.ini', 'w') as f:
@@ -64,8 +63,6 @@ def client():
       'port': 6790,
       'app_ini': 'app_test.ini'
     }
-
-    app.settings = config_parser.load(settings)
 
     print('Ita PC is running')
     print('-' * 25)
