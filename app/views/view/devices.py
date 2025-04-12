@@ -30,10 +30,7 @@ def new():
 # create route
 @bp.route('/', methods=['POST'])
 def create():
-    device = Device()
-    device.name = params()['name']
-    device.hash = params()['hash']
-    device.save()
+    Device.create_with(device_params)
     flash('Device created successfully.', 'success')
 
     return redirect(url_for('.index'))
@@ -55,14 +52,12 @@ def edit(id):
 @bp.route('/<int:id>', methods=['POST'])
 def update(id):
     device = Device.find(id)
+
     if not device:
         flash('Device not found.', 'error')
         return redirect(url_for('.index'))
 
-    device.name = params()['name']
-    device.hash = params()['hash']
-
-    device.save()
+    device.update_with(device_params)
     flash('Device updated successfully.', 'success')
 
     return redirect(url_for('.index'))
@@ -73,10 +68,14 @@ def update(id):
 def delete(id):
     device = Device.find(id)
     if device:
-        device.delete_instance()
+        device.destroy()
 
         flash('Device deleted successfully.', 'success')
     else:
         flash('Device not found.', 'error')
 
     return redirect(url_for('.index'))
+
+
+def device_params():
+    return params().permit('name', 'hash')

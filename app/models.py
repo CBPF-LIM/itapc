@@ -39,18 +39,37 @@ class BaseModel(Model):
         database = db
         legacy_table_names = False
 
+    def destroy(self):
+        self.delete_instance()
+
     def set_attrs(self, attrs):
+        if callable(attrs):
+            attrs = attrs()
+
         for k, v in attrs.items():
             if hasattr(self, k):
                 setattr(self, k, v)
 
-    def update_fields(self, attrs):
+    def update_with(self, attrs):
+        if callable(attrs):
+            attrs = attrs()
+
         self.set_attrs(attrs)
         self.save()
         return self
 
     @classmethod
-    def create(cls, attrs):
+    def new_with(cls, attrs):
+        if callable(attrs):
+            attrs = attrs()
+
+        return cls(**attrs)
+
+    @classmethod
+    def create_with(cls, attrs):
+        if callable(attrs):
+            attrs = attrs()
+
         obj = cls()
         obj.set_attrs(attrs)
         obj.save()
@@ -102,7 +121,7 @@ class Experiment(BaseModel):
 
 class Device(BaseModel):
     name = CharField(default="")
-    hash = CharField(unique=True)
+    hash = CharField(default="", unique=True)
 
 class Data(BaseModel):
     experiment = ForeignKeyField(Experiment, backref='data')
