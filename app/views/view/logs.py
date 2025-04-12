@@ -1,6 +1,6 @@
 import os
 from flask import redirect
-from flasktools import *
+from tools.flasktools import *
 
 bp = auto_blueprint()
 

@@ -1,5 +1,5 @@
 from flask import redirect, request, flash
-from flasktools import *
+from tools.flasktools import *
 from app.models import Setting
 import json
 

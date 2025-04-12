@@ -1,7 +1,7 @@
 from flask import request
 from app import response
-import ita
-from flasktools import *
+import app.ita as ita
+from tools.flasktools import *
 
 bp = auto_blueprint()
 

@@ -1,5 +1,5 @@
 import inspect
-from flask import Blueprint, request, jsonify, render_template, redirect, current_app, url_for
+from flask import Blueprint, request, render_template,current_app, url_for
 
 # Public methods
 

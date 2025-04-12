@@ -1,4 +1,4 @@
-from flasktools import *
+from tools.flasktools import *
 
 bp = auto_blueprint()
 

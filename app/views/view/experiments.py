@@ -1,7 +1,7 @@
 import json
 from flask import redirect, flash
 from app.models import Experiment, Data, Setting
-from flasktools import *
+from tools.flasktools import *
 
 bp = auto_blueprint()
 
