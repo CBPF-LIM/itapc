@@ -15,9 +15,15 @@ def refresh(id, index):
     offset = max(0, total - 100)
     rows = query.offset(offset)
 
-    cols = [ {"id": d.id, "cols": d.cols} for d in rows]
-    data = {'response': 'success', 'type': 'GET', 'cols': cols}
-    data['header'] = experiment.header
+    def row(d):
+        return { "id": d.id,
+                 "row": d.cols,
+                 "meta": { "t0": d.t0,
+                           "t1": d.t1,
+                           "created_at": d.created_at } }
+
+    rows_payload = [row(d) for d in rows ]
+    data = {'response': 'success', 'type': 'GET', 'rows': rows_payload, 'header': experiment.header}
 
     return jsonify(data)
 

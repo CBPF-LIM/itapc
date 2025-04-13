@@ -48,9 +48,18 @@
       </label>
     </div>
 
-    <span id="table-headers" data-headers="{{ experiment.header }}"></span>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="metadata-toggler">
+      <label class="form-check-label" for="metadata-toggler">
+        Show Metadata
+      </label>
+    </div>
+
+    <span id="experiment-header" data-headers="{{ experiment.header }}"></span>
     <table id="output-table" class="order-1 table table-striped table-condensed table-responsive table-hover table-bordered">
-      <tbody id="output">
+      <thead>
+      </thead>
+      <tbody>
       </tbody>
     </table>
   </div>

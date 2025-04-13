@@ -59,3 +59,13 @@
   50% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+#output-table .metadata-header,
+#output-table .metadata-value {
+  display: none;
+}
+
+#output-table.show-metadata .metadata-header,
+#output-table.show-metadata .metadata-value {
+  display: table-cell;
+}
