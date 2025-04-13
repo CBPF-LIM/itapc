@@ -772,6 +772,20 @@ Werkzeug = "*"
 docs = ["Sphinx", "sphinx-rtd-theme"]
 
 [[package]]
+name = "python-dotenv"
+version = "1.1.0"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "python_dotenv-1.1.0-py3-none-any.whl", hash = "sha256:d7c01d9e2293916c18baf562d95698754b0dbbb5e74d457c45d4f6561fb9d55d"},
+    {file = "python_dotenv-1.1.0.tar.gz", hash = "sha256:41f90bc6f5f177fb41f53e87666db362025010eb28f60a01c9143bfa33a2b2d5"},
+]
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "python-engineio"
 version = "4.12.0"
 description = "Engine.IO server and client for Python"
@@ -1073,4 +1087,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "f27e35e939f1677b77d85a64fa7d22b0984dc68ee17a7cabb205bd37df28e10e"
+content-hash = "71a83539d3fece07327c5f547a651d7629cef34cfbea5b8cba479d108f456826"
