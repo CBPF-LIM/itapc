@@ -1,12 +1,11 @@
 [tool.poetry]
-name = "itapc"
+name = "itaserver"
 version = "0.1.1"
-description = "Ita PC has the same functionality as the Ita (AppScript), but it is a PC application."
+description = "ItaServer has the same functionality as the Ita (AppScript), but it is a PC application."
 authors = ["David Vaz Teixeira <dvt4qb@gmail.com>"]
 readme = "README.md"
 packages = [
   { include = "app" },
-  { include = "ita" },
   { include = "tools" }
 ]
 
@@ -31,4 +30,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-itapc = "app.main:main"
+itaserver = "app.main:main"
