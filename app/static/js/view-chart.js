@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
   var update_channel = `update-${experiment_id}`
   var syncCheckbox = document.getElementById('sync-checkbox')
 
+  var url_x_param = new URLSearchParams(window.location.search).get('x');
+  var url_y_param = new URLSearchParams(window.location.search).get('y');
+
   var chartInstance = null;
 
   var socket = io.connect('http://' + document.location.hostname + ':' + location.port);
@@ -91,6 +94,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     await get_axis_names();
     await get_data();
     setSync()
+
+    var url = new URL(window.location.href);
+    url.searchParams.set('x', x_axis.selectedIndex);
+    url.searchParams.set('y', y_axis.selectedIndex);
+    window.history.replaceState({}, '', url);
   }
 
   function parse_rows() {
@@ -151,11 +159,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
       })
       .then(function(data) {
         if(data.response == 'success') {
-          header = data.header;
+          header = JSON.parse(data.header);
           data_info = document.getElementById('data-info')
-          if(data.cols.length) {
-            max_index = parseInt(data.cols[data.cols.length - 1]['id']);
-            new_points = data.cols;
+          if(data.rows.length) {
+            max_index = parseInt(data.rows[data.rows.length - 1]['id']);
+            new_points = data.rows;
             data_info.classList.add('d-none')
             setTimeout(create_chart, 50);
           } else {
@@ -178,7 +186,7 @@ function get_xy() {
 
     for (var i = 0; i < data.length; i++) {
       var row = data[i];
-      var cols = row['cols'];
+      var cols = row['row'];
       var id = row['id'];
 
       x.push(cols[x_index]);
@@ -220,4 +228,10 @@ function get_xy() {
       status_message.classList.remove('on');
       console.log('Disconnected');
   });
+
+  if(url_x_param && url_y_param) {
+    x_axis.selectedIndex  = parseInt(url_x_param);
+    y_axis.selectedIndex  = parseInt(url_y_param);
+    generate_chart.click();
+  }
 });
