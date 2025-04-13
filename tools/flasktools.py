@@ -93,3 +93,13 @@ def params():
     if not hasattr(g, '_params'):
         g._params = Params()
     return g._params
+
+def register_flasktools_helpers(app):
+    @app.context_processor
+    def expose_helpers():
+        return dict(
+            action_for=action_for,
+            action_path=action_path,
+            action_url=action_url,
+            params=params
+        )

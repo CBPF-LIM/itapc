@@ -2,7 +2,6 @@ import json
 from flask import redirect, flash
 from app.models import Device
 from tools.flasktools import *
-from tools.shortcuts import b
 
 bp = auto_blueprint()
 

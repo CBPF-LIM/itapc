@@ -2,7 +2,6 @@ from flask import request
 from app import data_processor
 from app.services import ita
 from tools.flasktools import *
-from tools.shortcuts import b
 
 bp = auto_blueprint()
 

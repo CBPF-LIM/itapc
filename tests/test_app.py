@@ -6,7 +6,6 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 import pytest
 from app.main import create_app
 import ita
-from tools.shortcuts import b
 from tools import filelines
 import time
 from datetime import datetime

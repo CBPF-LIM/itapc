@@ -1,5 +1,4 @@
 import time
-from tools.shortcuts import b
 from flask import jsonify
 
 def success(data, type='GET'):

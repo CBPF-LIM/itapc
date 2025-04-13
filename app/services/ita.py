@@ -1,5 +1,4 @@
 import json
-from tools.shortcuts import b
 from datetime import datetime
 from app.models import Experiment, Device, Data
 from app.data_processor import success, error

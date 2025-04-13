@@ -14,3 +14,5 @@ config_test.ini
 
 error.log
 *.db
+
+app_secret_key.txt

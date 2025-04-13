@@ -1,24 +1,25 @@
-from flask import Flask
-import jinja_partials
+from flask import Flask, g
 from flask_socketio import SocketIO
+import jinja_partials
+from tools.flasktools import register_flasktools_helpers
+from app.environment import ENV
 from app.routes import draw_routes_for
-from tools.flasktools import action_for
-import os
+from app.secret import get_app_secret
 
 def create_app():
     app = Flask(__name__)
-    socketio = SocketIO(app, async_mode='eventlet')
+    app.ENV = ENV
+    app.config['SECRET_KEY'] = get_app_secret()
+    app.socketio = SocketIO(app, async_mode='eventlet')
     jinja_partials.register_extensions(app)
+    register_flasktools_helpers(app)
 
-    app.socketio = socketio
-
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-secret-key')
+    app.boot_params = {
+        'host': app.ENV['host'],
+        'port': app.ENV['port'],
+        'debug': app.ENV['debug']
+    }
 
     draw_routes_for(app)
 
-    @app.context_processor
-
-    def expose_helpers():
-        return dict(action_for=action_for)
-
-    return app, socketio
+    return app
