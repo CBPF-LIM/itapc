@@ -1,18 +1,33 @@
-from app.views.view.root import bp as view_root_blueprint
-from app.views.view.api import bp as view_api_blueprint
-from app.views.view.logs import bp as view_logs_blueprint
-from app.views.view.settings import bp as view_settings_blueprint
-from app.views.view.experiments import bp as view_experiments_blueprint
-from app.views.view.devices import bp as view_devices_blueprint
+from importlib import import_module
+from tools.shortcuts import b
+import yaml
 
-from app.views.api import bp as api_blueprint
+def draw_routes_for(app, prefix='', import_prefix=''):
+    blueprint_map = load_routes(app)
+    recursive_draw(app, blueprint_map, prefix, import_prefix)
 
-def draw_routes_for(app):
-    app.register_blueprint(view_root_blueprint, url_prefix='/')
-    app.register_blueprint(view_api_blueprint, url_prefix='/view/api')
-    app.register_blueprint(view_logs_blueprint, url_prefix='/view/logs')
-    app.register_blueprint(view_settings_blueprint, url_prefix='/view/settings')
-    app.register_blueprint(view_experiments_blueprint, url_prefix='/view/experiments')
-    app.register_blueprint(view_devices_blueprint, url_prefix='/view/devices')
+def recursive_draw(app, blueprint_map, prefix='', import_prefix=''):
+    for key, value in blueprint_map.items():
+        if isinstance(value, dict):
+            # Recurse into nested group
+            new_prefix = f"{prefix}/{key}".strip('/')
+            new_import_prefix = f"{import_prefix}.{key}" if import_prefix else key
+            recursive_draw(app, value, new_prefix, new_import_prefix)
+        else:
+            # Build the full module path
+            module_path = f"app.views.{import_prefix}.{key}" if import_prefix else f"app.views.{key}"
 
-    app.register_blueprint(api_blueprint, url_prefix='/api')
+            if value.startswith('/'):
+                url_prefix = value
+            else:
+                url_prefix = f"/{prefix}/{value}".replace('//', '/')
+
+            module = import_module(module_path)
+            blueprint = getattr(module, 'bp')
+            app.register_blueprint(blueprint, url_prefix=url_prefix)
+
+def load_routes(app):
+    with open('app/routes.yml', 'r') as file:
+        routes = yaml.safe_load(file)
+
+    return routes

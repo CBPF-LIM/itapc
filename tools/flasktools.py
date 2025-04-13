@@ -103,3 +103,22 @@ def register_flasktools_helpers(app):
             action_url=action_url,
             params=params
         )
+
+def _rule_hash(rule):
+    view_action = rule.endpoint.split('.')
+    view = view_action[0]
+    action = view_action[-1]
+
+    if view == action:
+        view = ''
+
+    methods = set(rule.methods) & {'GET', 'POST', 'PUT', 'DELETE', 'PATCH'}
+
+    return {
+        'methods': ','.join(sorted(methods)),
+        'endpoint': rule.rule,
+        'view': rule.endpoint.replace('.', '#').replace('/', '.'),
+        }
+
+def get_routes(app):
+    return [_rule_hash(rule) for rule in app.url_map.iter_rules()]

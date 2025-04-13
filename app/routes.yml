@@ -1,0 +1,10 @@
+view:
+  root: /
+  api: api
+  logs: logs
+  settings: settings
+  experiments: experiments
+  devices: devices
+api: api
+flask:
+  info: info

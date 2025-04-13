@@ -1,0 +1,22 @@
+<h1>Routes</h1>
+
+<p>information from rules of app.url_map</p>
+
+<table class="table table-striped table-bordered table-responsive">
+  <thead>
+    <tr>
+      <th>Methods</th>
+      <th>Path</th>
+      <th>View#Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for route in routes %}
+      <tr>
+        <td>{{ route.methods }}</td>
+        <td>{{ route.endpoint }}</td>
+        <td>{{ route.view }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
