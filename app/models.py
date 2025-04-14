@@ -31,7 +31,7 @@ def json_property(field_name, default={}):
     return property(getter, setter)
 
 class BaseModel(Model):
-    id = PrimaryKeyField()
+    id = AutoField()
     created_at = DateTimeField(default=datetime.now)
     updated_at = DateTimeField(null=True)
 

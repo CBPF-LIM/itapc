@@ -16,7 +16,7 @@ if(ENV['host'] == 'localhost'):
 def config_class():
     if ENV['environment'] == 'development':
         from app.config import ConfigDevelopment as Config
-    elif ENV['environment'] == 'test':
+    elif ENV['environment'] == 'testing':
         from app.config import ConfigTest as Config
     elif ENV['environment'] == 'production':
         from app.config import ConfigProduction as Config
