@@ -6,7 +6,7 @@ from playhouse.signals import Model, pre_save
 # from playhouse.sqlite_ext import JSONField
 
 # SQLite database
-db = SqliteDatabase("ita.db")
+db = SqliteDatabase(None)
 
 # Define a custom JSON property for the model
 def json_property(field_name, default={}):
@@ -133,13 +133,16 @@ class Data(BaseModel):
     _cols = TextField(column_name='cols', null=True)
     cols = json_property('_cols')
 
-db.connect()
-db.create_tables([Data, Experiment, Device, Setting, SystemConfig, AppConfig], safe=True)
+def init_db():
+    db.connect()
+    db.create_tables([Data, Experiment, Device, Setting, SystemConfig, AppConfig], safe=True)
 
-if not AppConfig.select().exists():
-    # create default settings
-    #
-    # AppConfig.create(key="...", value="...")
-    # AppConfig.create(key="...", value="...")
-    # AppConfig.create(key="...", value="...")
-    pass
+    if not AppConfig.select().exists():
+        # create default settings
+        #
+        # AppConfig.create(key="...", value="...")
+        # AppConfig.create(key="...", value="...")
+        # AppConfig.create(key="...", value="...")
+        pass
+
+    db.close()
