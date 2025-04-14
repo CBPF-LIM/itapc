@@ -7,20 +7,18 @@ def green(text):
 def red(text):
     return f"\033[91m{text}\033[0m"
 
+def yellow(text):
+    return f"\033[93m{text}\033[0m"
+
+def bold(text):
+    return f"\033[1m{text}\033[0m"
 
 def strip_ansi_codes(text):
-    """
-    Remove ANSI escape codes from a string.
-    """
     # Regex pattern to match ANSI escape codes
     ansi_escape_pattern = r"\x1B[@-_][0-?]*[ -/]*[@-~]"
     return re.sub(ansi_escape_pattern, "", text)
 
 def parse_line(line):
-    """
-    Parse a single line of pytest output into a hierarchical dictionary.
-    """
-    # Check if the line starts with "tests/"
     if not line.startswith("tests/"):
         return None
 
@@ -33,7 +31,7 @@ def parse_line(line):
         return None
 
     # Extract the file path, describe blocks, test name, status, and progress
-    file_path = parts[0].replace("tests/", "")
+    file_path = bold(parts[0].replace("tests/", ""))
     describe_blocks = parts[1:-2]  # All describe blocks
     test_name = parts[-2]#.replace("_", " ")
     status = parts[-1]
@@ -43,9 +41,12 @@ def parse_line(line):
     if status == "PASSED":
         test_name = green(test_name)
         status = green("✔")
-    else:
+    elif status == "FAILED":
         test_name = red(test_name)
         status = red("✘")
+    elif status == "SKIPPED":
+        test_name = yellow(test_name)
+        status = yellow("⚠")
 
     # Construct the hierarchical dictionary
     hierarchy = {}
