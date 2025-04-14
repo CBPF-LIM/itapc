@@ -1,8 +1,7 @@
-import pytest
 from app.models import Device
 
 def describe_device():
-  def test_device_creation():
+  def it_creates_an_device():
       device = Device.create_with({
           'name': 'Test Device',
           'hash': 'abcd',
