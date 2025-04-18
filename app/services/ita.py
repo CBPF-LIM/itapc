@@ -3,89 +3,106 @@ from datetime import datetime
 from app.models import Experiment, Device, Data, ApiKey
 from app.data_processor import success, error
 
-def save_data(data):
-  experiment_id = data.get("exp")
-  experiment = Experiment.get_or_none(Experiment.id == experiment_id)
+def create_data(data):
+  experiment_id = data.get('exp')
 
+  experiment = Experiment.find(experiment_id)
   if not experiment:
-    number_of_cols = len(data["cols"])
-    header = [f"Col {i+1}" for i in range(number_of_cols)]
+    return {'error': f'Experiment id={experiment_id} not found!'}
 
-    experiment = Experiment.create(
-        name='Untitled Experiment',
-        header=json.dumps(header)
-    )
-  else:
-    if not check_api_authetication(experiment, data.get("apikey")):
-        return error('Unauthorized!', 'POST')
-
-  device = Device.get_or_none(Device.hash == data["device"])
-
+  device_id = data.get('device')
+  device = Device.find(device_id)
   if not device:
-    device = Device.create(
-      hash=data["device"]
-    )
+    return {'error': f'Device id={device_id} not found!'}
 
-  # Create Data entry
-  d = Data.create(
-      experiment=experiment,
-      device=device,
-      t0=data["t0"],
-      t1=data["t1"],
-      timestamp=datetime.now(),
-      _cols=json.dumps(data["cols"])
+  if not check_api_authetication(experiment, data.get("apikey")):
+    return {'error': 'Unauthorized!'}
+
+  Data.create(
+    experiment=experiment,
+    device=device,
+    t0=data["t0"],
+    t1=data["t1"],
+    timestamp=datetime.now(),
+    _cols=json.dumps(data["cols"])
   )
 
-  response = {'channel': f'update-{experiment.id}'}
+  return {'experiment_id': experiment.id }
 
-  # index_error = validate_index(index)
-  # if index_error:
-  #   return error(index_error, 'POST')
+def find_or_create_experiment(data):
+    name = data.get('name')
 
-  return success(response, 'POST')
+    if not name:
+        return {'error': 'Missing experiment name'}
 
-def processGet(query):
-    experiment_id = query.get('exp')
-    experiment = Experiment.get_or_none(Experiment.id == experiment_id)
+    experiment = Experiment.find_by(name=name)
+
+    if experiment:
+        new = False
+    else:
+        new = True
+
+        try:
+            raw_header = data.get('header')
+            header = json.dumps(raw_header)
+        except:
+            return {'error': 'Invalid header: Must be a JSON array'}
+
+        experiment = Experiment.create_with({"name": name, "header": header})
+
+    return { 'id': experiment.id, 'new': new }
+
+
+def find_or_create_device(data):
+    hash = data.get('hash')
+
+    if not hash:
+        return {'error': 'Missing unique hash for device'}
+
+    device = Device.get_or_none(Device.hash == hash)
+
+    if not device:
+        name = data.get('name', 'Untitled')
+        device = Device.create(name=name, hash=hash)
+        new = True
+    else:
+        new = False
+
+    return { 'id': device.id, 'new': new }
+
+def run_exp_cmd(experiment_id, cmd):
+    experiment = Experiment.find(experiment_id)
 
     if not experiment:
-        return error('Experiment not found')
+        return {'error': f'Experiment id={experiment_id} not found!'}
 
-    if 'cmd' in query:
-        cmd = query['cmd']
+    if not experiment.setting:
+        return {'data': ''}
 
-        if cmd == 'configs':
-            return success(experiment.setting.config)
+    if cmd == 'configs':
+        return {'data': experiment.setting.config}
 
-    elif 'config' in query:
-        key = query['config']
-        value = experiment.setting.config.get(key)
+def get_exp_config(experiment_id, key):
+    experiment = Experiment.find(experiment_id)
+    if not experiment:
+        return {'error': f'Experiment id={experiment_id} not found!'}
+    if not experiment.setting:
+        return {'error': 'Experiment has no settings'}
 
-        if value:
-            return success(value)
-        else:
-            return error('Config not found')
+    if not experiment.setting.config:
+        return {'error': 'Experiment has no settings config'}
 
-    if query == {}:
-        return success('Nothing to do')
+    if key not in experiment.setting.config:
+        return {'data': ''}
 
-    return error('Invalid command')
-
-def processPost(data):
-    if 'cols' in data:
-        return save_data(data)
-
-    return error('Invalid data')
+    return {'data': experiment.setting.config[key]}
 
 def check_api_authetication(experiment, hash):
     settings = experiment.setting
-    print('settings', settings)
     if settings:
         config = settings.config
-        print('config', config)
         if config:
             api_key_id = config.get('api_key_id')
-            print('api_key_id', api_key_id)
             if api_key_id:
                 api_key = ApiKey.get_or_none(ApiKey.id == api_key_id)
                 return hash == api_key.hash

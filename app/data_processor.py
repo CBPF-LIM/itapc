@@ -4,15 +4,13 @@ from flask import jsonify
 def success(data, type='GET'):
     data = {
         'response': 'success',
-        'type': type,
-        'data': data
+        **data
     }
     return data
 
 def error(message=None, type='GET'):
     data = {
         'response': 'error',
-        'type': type,
         'message': message or 'Something went wrong'
     }
     return data
@@ -35,14 +33,7 @@ def process_get(payload):
 def process_post(payload):
     error = log_for(payload, 'POST')
     if error:
-        data = { 'response': 'error', 'type': 'POST', 'message': error }
+        data = { 'response': 'error', 'message': error }
         return jsonify(data), 404
 
-    return jsonify({'response': 'success'}), 200
-
-def response(data):
-    if data['type'] == 'GET':
-        return process_get(data)
-
-    if data['type'] == 'POST':
-        return process_post(data)
+    return jsonify(payload), 200
