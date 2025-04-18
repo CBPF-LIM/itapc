@@ -74,6 +74,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
       }
 
       var th = document.createElement('th');
+      th.innerHTML = "Device";
+      th.classList.add('metadata-header')
+      tr.appendChild(th);
+
+      var th = document.createElement('th');
       th.innerHTML = "t0";
       th.classList.add('metadata-header')
       tr.appendChild(th);
@@ -110,6 +115,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
       table_body.appendChild(tr);
 
       var meta = rows[i]['meta'];
+
+      var td = document.createElement('td');
+      td.classList.add('metadata-value')
+      td.innerHTML = meta.device
+      tr.appendChild(td);
+      table_body.appendChild(tr);
 
       var td = document.createElement('td');
       td.classList.add('metadata-value')

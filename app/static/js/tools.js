@@ -6,6 +6,35 @@
  *
  */
 
+function clean_output(text) {
+  return text
+    .split('\n')
+    .map(line => line.trim())
+    .join('\n');
+}
+
+function loadSimpleTemplate() {
+  const template = `
+    "cols": [1, 2, 3],
+    "exp": "{{experiment.id}}",
+    "device": "ita-tools",
+    "t0": "1",
+    "t1": "2"`.trim();
+  document.getElementById('cols').value = clean_output(template);
+}
+
+function loadAuthTemplate() {
+  const template = `
+    "cols": [1, 2, 3],
+    "apikey": "your_api_key_here",
+    "exp": "{{experiment.id}}",
+    "device": "ita-tools",
+    "t0": "1",
+    "t1": "2"`.trim()
+
+  document.getElementById('cols').value = clean_output(template);
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
   var post_button = document.getElementById('post-button');
   var post_output = document.getElementById('post-output');
@@ -42,8 +71,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 
   post_button.addEventListener('click', function(event) {
-    var processed_cols = cols.value.split(',');
-    var json_data = {exp: experiment_id, device: '000088FA7412CFA4', t0: '1', t1: '2', cols: processed_cols};
+    var json_data
+
+    try {
+      json_data = JSON.parse('{' + cols.value + "}");
+    } catch (e) {
+      data_error(post_output, "Invalid JSON. Check syntax!");
+      return;
+    }
+
     fetch('/api', {
       method: 'POST',
       headers: {
@@ -54,8 +90,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
       return response.json();
     }).then(function(data) {
       data.response == 'success' ? data_success(post_output, "Ok") : data_error(post_output, data.message);
-    }).catch(function(error) {
-      alert('Error: ' + error);
+    }).catch(function(data) {
+      alert('Error: ' + data);
     })
   })
 
@@ -86,4 +122,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
       data_error(config_output, error);
     })
   })
+
+  loadSimpleTemplate();
 })

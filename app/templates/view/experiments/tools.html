@@ -16,7 +16,12 @@
     <div class="col-md-6 col-xs-12">
       <div class="input-group mb-3">
         <button class="btn btn-outline-secondary" type="button" id="post-button">Send</button>
-        <input id="cols" name="cols" type="text" class="form-control" placeholder="1,2,3,4">
+        <textarea id="cols" name="cols" type="text" class="form-control" rows="6"></textarea>
+      </div>
+      <div>
+        Templates:
+        <button class='btn btn-outline-primary' onclick="loadSimpleTemplate()">Simple</button>
+        <button class='btn btn-outline-primary' onclick="loadAuthTemplate()">Auth</button>
       </div>
     </div>
     <div class="col-md-6 col-xs-12">

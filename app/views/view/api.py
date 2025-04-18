@@ -20,6 +20,7 @@ def refresh(id, index):
                  "row": d.cols,
                  "meta": { "t0": d.t0,
                            "t1": d.t1,
+                           "device": d.device.name,
                            "created_at": d.created_at } }
 
     rows_payload = [row(d) for d in rows ]

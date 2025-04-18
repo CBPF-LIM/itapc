@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from app.models import Experiment, Device, Data
+from app.models import Experiment, Device, Data, ApiKey
 from app.data_processor import success, error
 
 def save_data(data):
@@ -15,6 +15,9 @@ def save_data(data):
         name='Untitled Experiment',
         header=json.dumps(header)
     )
+  else:
+    if not check_api_authetication(experiment, data.get("apikey")):
+        return error('Unauthorized!', 'POST')
 
   device = Device.get_or_none(Device.hash == data["device"])
 
@@ -73,3 +76,22 @@ def processPost(data):
         return save_data(data)
 
     return error('Invalid data')
+
+def check_api_authetication(experiment, hash):
+    settings = experiment.setting
+    print('settings', settings)
+    if settings:
+        config = settings.config
+        print('config', config)
+        if config:
+            api_key_id = config.get('api_key_id')
+            print('api_key_id', api_key_id)
+            if api_key_id:
+                api_key = ApiKey.get_or_none(ApiKey.id == api_key_id)
+                return hash == api_key.hash
+            else:
+                return True # No api_key_id? Disable authentication
+        else:
+            return True # No config? Disable authentication
+    else:
+        return True # No settings? Disable authentication
