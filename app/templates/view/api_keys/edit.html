@@ -1,0 +1,18 @@
+{{ render_partial('view/api_keys/_form.html', api_key=api_key, action=action_for('.update', id=api_key.id)) }}
+
+<div class="input-group mb-3">
+  <span class="input-group-text">Hash</span>
+  <input name="hash" type="text" value="{{ api_key.hash }}" class="form-control" placeholder="Hash">
+</div>
+
+<details style="background-color: #f8d7da; border-radius: 5px; padding: 10px; border: 1px solid #f5c6cb; cursor: pointer; width: 100%; margin-top: 20px; margin-bottom: 20px;">
+  <summary style="font-size: 1.5em; font-weight: bold; color: #dc3545;">Danger zone</summary>
+  <hr>
+
+  <form method="POST" action="{{ action_for('.delete', id=api_key.id) }}" class="d-inline" onsubmit="return confirm('Delete api_key?');">
+    <button type="submit" class="btn btn-danger">Delete</button>
+  </form>
+
+  <p class='mt-2'>
+    This will delete the api_key. This action cannot be undone.
+  </p>

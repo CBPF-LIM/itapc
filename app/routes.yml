@@ -5,6 +5,7 @@ view:
   settings: settings
   experiments: experiments
   devices: devices
+  api_keys: api_keys
 api: api
 flask:
   info: info

@@ -1,0 +1,42 @@
+<h1>API Keys</h1>
+<hr>
+
+<p> List of API keys. Used to authenticate the POST requests to the API. </p>
+
+<div class="d-flex gap-2">
+    <a href="{{ action_for('.index') }}" class="btn btn-primary">Refresh</a>
+    <a href="{{ action_for('.new') }}" class="btn btn-primary">New</a>
+</div>
+
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Hash</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for api_key in api_keys %}
+        <tr>
+            <td><a href="{{ action_for('.edit', id=api_key.id) }}">{{ api_key.id }}</a></td>
+            <td><a href="{{ action_for('.edit', id=api_key.id) }}">{{ api_key.name }}</a></td>
+            <td>
+                <button class="btn btn-secondary btn-sm" onclick="revealHash(event)">Reveal</button>
+                <span class="apikey mono obfuscated">{{ api_key.hash }}</span>
+                <span class="apikey mono">{{ '*' * api_key.hash|length }}</span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function revealHash(event) {
+        console.log(event);
+        event.preventDefault();
+        const parent = event.target.closest('td');
+        const apikeys = parent.querySelectorAll('.apikey');
+        for (const apikey of apikeys) apikey.classList.toggle('obfuscated');
+    }
+</script>
