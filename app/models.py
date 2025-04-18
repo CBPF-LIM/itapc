@@ -133,9 +133,13 @@ class Data(BaseModel):
     _cols = TextField(column_name='cols', null=True)
     cols = json_property('_cols')
 
+class ApiKey(BaseModel):
+    name = CharField(default="", unique=True)
+    hash = CharField(default="", unique=True)
+
 def init_db():
     db.connect()
-    db.create_tables([Data, Experiment, Device, Setting, SystemConfig, AppConfig], safe=True)
+    db.create_tables([Data, Experiment, Device, Setting, SystemConfig, AppConfig, ApiKey], safe=True)
 
     if not AppConfig.select().exists():
         # create default settings
