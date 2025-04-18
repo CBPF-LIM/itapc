@@ -26,11 +26,11 @@ function loadSimpleTemplate() {
 function loadAuthTemplate() {
   const template = `
     "cols": [1, 2, 3],
-    "apikey": "your_api_key_here",
     "exp": "{{experiment.id}}",
     "device": "ita-tools",
     "t0": "1",
-    "t1": "2"`.trim()
+    "t1": "2",
+    "apikey": "your_api_key_here"`.trim()
 
   document.getElementById('cols').value = clean_output(template);
 }
